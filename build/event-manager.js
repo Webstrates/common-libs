@@ -72,7 +72,7 @@ var WebstratesEventManager = function () {
  * the same WebstratesEventManager object.
  */
 webstrate.on('loaded', function () {
-  if (!window.parent) {
+  if (window.parent === window) {
     window.WebstratesEventManager = WebstratesEventManager;
   } else {
     var parentWindow = window.parent;
