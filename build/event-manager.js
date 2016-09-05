@@ -1,4 +1,6 @@
-var WebstratesEventManager = (function () {
+'use strict';
+
+var WebstratesEventManager = function () {
 
   var _eventHandlers = {};
 
@@ -18,8 +20,7 @@ var WebstratesEventManager = (function () {
 
     if (!_eventHandlers[name]) {
       _eventHandlers[name] = [handler];
-    }
-    else {
+    } else {
       _eventHandlers[name].push(handler);
     }
   };
@@ -52,16 +53,18 @@ var WebstratesEventManager = (function () {
    * @param {} event Event object.
    */
   this.trigger = function (name, event) {
-    const handlers = _eventHandlers[name];
+    var _this = this;
+
+    var handlers = _eventHandlers[name];
     if (handlers) {
-      handlers.forEach(handler => {
-        handler.call(this, event);
+      handlers.forEach(function (handler) {
+        handler.call(_this, event);
       });
     }
   };
 
   return this;
-}).call({});
+}.call({});
 
 /**
  * Once the webstrate loaded, receive the WebstratesEventManager object from
@@ -71,9 +74,8 @@ var WebstratesEventManager = (function () {
 webstrate.on('loaded', function () {
   if (!window.parent) {
     window.WebstratesEventManager = WebstratesEventManager;
-  }
-  else {
-    let parentWindow = window.parent;
+  } else {
+    var parentWindow = window.parent;
     while (parentWindow.parent) {
       parentWindow = parentWindow.parent;
     }

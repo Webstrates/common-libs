@@ -1,0 +1,32 @@
+{
+  "name": "common-libs",
+  "version": "1.0.0",
+  "description": "Webstrates common libraries encapsulating useful helper libraries.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-babel": "cd src && babel *.js --out-dir ../build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Webstrates/common-libs.git"
+  },
+  "keywords": [
+    "Webstrates",
+    "common-libs",
+    "helpers",
+    "permission",
+    "event",
+    "manager"
+  ],
+  "author": "Roman Raedle",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Webstrates/common-libs/issues"
+  },
+  "homepage": "https://github.com/Webstrates/common-libs#readme",
+  "devDependencies": {
+    "babel-cli": "^6.14.0",
+    "babel-preset-es2015": "^6.14.0"
+  }
+}
