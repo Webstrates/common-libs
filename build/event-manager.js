@@ -76,7 +76,7 @@ webstrate.on('loaded', function () {
     window.WebstratesEventManager = WebstratesEventManager;
   } else {
     var parentWindow = window.parent;
-    while (parentWindow && parentWindow.parent !== window) {
+    while (parentWindow && parentWindow.parent !== parentWindow) {
       parentWindow = parentWindow.parent;
     }
     window.WebstratesEventManager = parentWindow.WebstratesEventManager;
