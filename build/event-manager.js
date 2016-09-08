@@ -1,6 +1,6 @@
 'use strict';
 
-var WebstratesEventManager = function () {
+var EventManager = function () {
 
   var _eventHandlers = {};
 
@@ -73,12 +73,12 @@ var WebstratesEventManager = function () {
  */
 webstrate.on('loaded', function () {
   if (window.parent === window) {
-    window.WebstratesEventManager = WebstratesEventManager;
+    webstrate.eventManager = EventManager;
   } else {
     var parentWindow = window.parent;
     while (parentWindow && parentWindow.parent !== parentWindow) {
       parentWindow = parentWindow.parent;
     }
-    window.WebstratesEventManager = parentWindow.WebstratesEventManager;
+    webstrate.eventManager = parentWindow.webstrate.eventManager;
   }
 });
