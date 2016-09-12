@@ -77,9 +77,8 @@ webstrate.on("loaded", () => {
       content = Babel.transform(content, { presets: ['es2015'] }).code;
     }
 
-    // script.innerHTML = content;
-    // console.log('eval %o', content);
-    window.eval.call(window, content); // It seems that script.innerHTML already evals the content. Great! No explicit eval needed.
+    // window.eval.call(window, content); // It seems that script.innerHTML already evals the content. Great! No explicit eval needed.
+    script.innerHTML = content;
   };
 
   /**
