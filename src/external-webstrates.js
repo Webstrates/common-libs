@@ -5,17 +5,19 @@ const isECMA2015Supported = function () {
   return ("fetch" in window);
 }
 
-const wscriptsSelector = 'wscript[type="webstrate/javascript"]';
-const wlinksSelector = 'wlink[type="webstrate/css"]';
+const selector = 'wscript[type="webstrate/javascript"],wlink[type="webstrate/css"]';
 
 // Wait for main webstrate to be loaded.
 webstrate.on("loaded", () => {
   // console.debug('webstrates external script library loaded document=%o, window=%o', document, window.location.href);
 
+  let currentLoadOrderIndex = -1;
+  const iframeQueue = [];
+
   // Add transient container to load external scripts.
   const transient = document.createElement('transient');
   transient.setAttribute('type', 'webstrates-external-scripts');
-  
+
   // Hide external webstrates
   transient.style.display = 'none';
 
@@ -31,35 +33,65 @@ webstrate.on("loaded", () => {
 
     const iframe = document.querySelector('transient iframe[webstrate-id="' + webstrateId + '"]');
     if (iframe) {
-      const frameDocument = iframe.contentDocument;
-      const contentType = iframe.getAttribute('content-type');
-      const contentId = iframe.getAttribute('content-id');
+      const loadOrder = parseInt(iframe.getAttribute('load-order'));
 
-      const contentElement = frameDocument.querySelector(`#${contentId}`);
-      if (!contentElement) {
-        console.warn(`Element pre#${contentId} in webstrate ${webstrateId} not found. Ignore loading contents.`);
-        return;
-      }
+      if ((currentLoadOrderIndex + 1) >= loadOrder) {
+        ++currentLoadOrderIndex;
+        execute(iframe);
 
-      // Add the content of the external webstrate inside of the script/link element and within a transient element so it
-      // does not get synced with sharedb.
-      const sourceElement = iframe.sourceElement;
-      const container = document.createElement("transient");
-      sourceElement.appendChild(container);
-
-      let content = frameDocument.querySelector(`#${contentId}`).innerText;
-      if (content) {
-        switch (contentType) {
-          case "webstrate/javascript":
-            executeJavaScript(webstrateId, container, content);
-            break;
-          case "webstrate/css":
-            executeCss(webstrateId, container, content, contentElement);
-            break;
+        for (let i = 0; i < iframeQueue.length; i++) {
+          const iframe = iframeQueue[i];
+          const loadOrder = parseInt(iframe.getAttribute('load-order'));
+          if ((currentLoadOrderIndex + 1) >= loadOrder) {
+            ++currentLoadOrderIndex;
+            iframeQueue.splice(i, 1);
+            --i;
+            execute(iframe);
+          }
         }
+      }
+      else {
+        // Content loaded but has to be queued because its off loading order.
+        iframeQueue.push(iframe);
       }
     }
   });
+
+  /**
+   * Execute external webstrate content loaded with iframe.
+   * 
+   * @param HTMLIFrameElement Iframe element, which was used to load external webstrate content.
+   */
+  const execute = (iframe) => {
+    const frameDocument = iframe.contentDocument;
+    const webstrateId = iframe.getAttribute('webstrate-id');
+    const contentType = iframe.getAttribute('content-type');
+    const contentId = iframe.getAttribute('content-id');
+
+    const contentElement = frameDocument.querySelector(`#${contentId}`);
+    if (!contentElement) {
+      console.warn(`Element pre#${contentId} in webstrate ${webstrateId} not found. Ignore loading contents.`);
+      return;
+    }
+
+    // Add the content of the external webstrate inside of the script/link element and within a transient element so it
+    // does not get synced with sharedb.
+    const sourceElement = iframe.sourceElement;
+    const container = document.createElement("transient");
+    sourceElement.appendChild(container);
+
+    let content = frameDocument.querySelector(`#${contentId}`).innerText;
+    if (content) {
+      switch (contentType) {
+        case "webstrate/javascript":
+          executeJavaScript(webstrateId, container, content);
+          break;
+        case "webstrate/css":
+          executeCss(webstrateId, container, content, contentElement);
+          break;
+      }
+    }
+  };
 
   /**
    * @param  {} content
@@ -152,6 +184,9 @@ webstrate.on("loaded", () => {
       // Create iframe to load external script.
       const iframe = document.createElement('iframe');
 
+      // The external webstrates load order. 
+      iframe.setAttribute('load-order', i);
+
       // The webstrate-id defines the origin of the script.
       iframe.setAttribute('webstrate-id', webstrateId);
 
@@ -174,13 +209,8 @@ webstrate.on("loaded", () => {
     }
   };
 
-  // Get all Webstrates external scripts.
-  const wscripts = document.querySelectorAll(wscriptsSelector);
-  // console.debug(`Found ${wscripts.length} webstrate/javascript scripts. Loading them now.`);
-  loadExternalWebstrates(wscripts);
-
-  // Get all Webstrates external styles.
-  const wlinks = document.querySelectorAll(wlinksSelector);
-  // console.debug(`Found ${wlinks.length} webstrate/css links. Loading them now.`);
-  loadExternalWebstrates(wlinks);
+  // Get all external webstrates.
+  const externalWebstrates = document.querySelectorAll(selector);
+  // console.debug(`Found ${externalWebstrates.length} external webstrates. Loading them now.`);
+  loadExternalWebstrates(externalWebstrates);
 });
