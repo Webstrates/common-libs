@@ -7,17 +7,22 @@ var isECMA2015Supported = function isECMA2015Supported() {
   return "fetch" in window;
 };
 
-var wscriptsSelector = 'script[type="webstrate/javascript"]';
-var wlinksSelector = 'link[type="webstrate/css"]';
+console.debug('webstrates external script library loaded');
+
+var wscriptsSelector = 'wscript[type="webstrate/javascript"]';
+var wlinksSelector = 'wlink[type="webstrate/css"]';
 
 // Wait for main webstrate to be loaded.
-webstrate.on("loaded", function (webstrateId, clientId, user) {
-
-  console.debug('webstrates external script library loaded');
+webstrate.on("loaded", function () {
+  // console.debug('webstrates external script library loaded document=%o, window=%o', document, window.location.href);
 
   // Add transient container to load external scripts.
   var transient = document.createElement('transient');
   transient.setAttribute('type', 'webstrates-external-scripts');
+
+  // Hide external webstrates
+  transient.style.display = 'none';
+
   var body = document.querySelector('body');
   body.appendChild(transient);
 
@@ -25,7 +30,9 @@ webstrate.on("loaded", function (webstrateId, clientId, user) {
   // transcluded webstrate is a webstrate loaded by definition of a <wscript />
   // tag, then the content in the #webstrate element is received, eventually
   // transformed using babel, and executed in the window context.
-  window.webstrate.on('transcluded', function (webstrateId) {
+  webstrate.on('transcluded', function (webstrateId) {
+    // console.debug(`transcluded ${webstrateId} in ${window.location.href}`);
+
     var iframe = document.querySelector('transient iframe[webstrate-id="' + webstrateId + '"]');
     if (iframe) {
       var frameDocument = iframe.contentDocument;
@@ -70,12 +77,13 @@ webstrate.on("loaded", function (webstrateId, clientId, user) {
     content = content + '\n//# sourceURL=' + webstrateId;
 
     if (!isECMA2015Supported() && Babel) {
-      console.debug('Transforming content to XXX compatible JavaScript.');
+      // console.debug(`Transforming content to XXX compatible JavaScript.`);
       content = Babel.transform(content, { presets: ['es2015'] }).code;
     }
 
-    script.innerHTML = content;
-    // window.eval.call(window, content); // It seems that script.innerHTML already evals the content. Great! No explicit eval needed.
+    // script.innerHTML = content;
+    // console.log('eval %o', content);
+    window.eval.call(window, content); // It seems that script.innerHTML already evals the content. Great! No explicit eval needed.
   };
 
   /**
@@ -131,15 +139,15 @@ webstrate.on("loaded", function (webstrateId, clientId, user) {
       var src = externalWebstrate.getAttribute('src');
 
       // Get only webstrate id if webstrate script is defined with as absolute or relative path.
-      var _webstrateId = src;
+      var webstrateId = src;
       var idx = void 0;
-      if ((idx = _webstrateId.lastIndexOf('/')) > -1) {
-        _webstrateId = _webstrateId.substring(idx + 1, _webstrateId.length);
+      if ((idx = webstrateId.lastIndexOf('/')) > -1) {
+        webstrateId = webstrateId.substring(idx + 1, webstrateId.length);
       }
 
       var contentType = externalWebstrate.getAttribute('type');
       if (!contentType) {
-        console.warn('Missing content type attribute on ' + _webstrateId + ' reference. It should either be type="webstrate/javascript" or type="webstrate/css".');
+        console.warn('Missing content type attribute on ' + webstrateId + ' reference. It should either be type="webstrate/javascript" or type="webstrate/css".');
         continue;
       }
 
@@ -150,7 +158,7 @@ webstrate.on("loaded", function (webstrateId, clientId, user) {
       var iframe = document.createElement('iframe');
 
       // The webstrate-id defines the origin of the script.
-      iframe.setAttribute('webstrate-id', _webstrateId);
+      iframe.setAttribute('webstrate-id', webstrateId);
 
       // The content-type defines external webstrates content type.
       // TODO: Ideally the content-type attribute is set on the <pre /> element in the external webstrate that holds the actual content.
@@ -162,9 +170,6 @@ webstrate.on("loaded", function (webstrateId, clientId, user) {
 
       // Define the external webstrate as source.
       iframe.setAttribute('src', src);
-
-      // Hide ewbstrate
-      iframe.style.display = 'none';
 
       // Set external webstrate HTML element as source element for later reference.
       iframe.sourceElement = externalWebstrate;
