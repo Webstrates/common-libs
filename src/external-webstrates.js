@@ -5,6 +5,66 @@ const isECMA2015Supported = function () {
   return ("fetch" in window);
 }
 
+class LoadOrderQueue {
+
+  constructor() {
+    this._queue = [];
+  }
+
+  add(iframe) {
+
+    const loadOrder = parseInt(iframe.getAttribute('load-order'));
+
+    const index = this._queue.findIndex(queuedIFrame => {
+      const queueIFrameLoadOrder = parseInt(queuedIFrame.getAttribute('load-order'));
+      return loadOrder < queueIFrameLoadOrder;
+    });
+
+    // console.log('add iframe at index %i', index);
+    if (index < 0) {
+      this._queue.push(iframe);
+    }
+    else {
+      this._queue.splice(index, 0, iframe);
+    }
+
+    // this.print();
+  }
+
+  remove(iframe) {
+    let idx;
+    if ((idx = idx = this._queue.indexOf(iframe)) > -1) {
+      this._queue.splice(idx, 1);
+    }
+
+    // this.print();
+  }
+
+  forEach(func) {
+    return this._queue.forEach(func);
+  }
+
+  get length() {
+    return this._queue.length;
+  }
+
+  // print() {
+  //   let print = '';
+  //   this._queue.forEach(iframe => {
+  //     const webstrateId = iframe.getAttribute('webstrate-id');
+  //     const loadOrder = parseInt(iframe.getAttribute('load-order'));
+
+  //     if (print === "") {
+  //       print = `${webstrateId}=${loadOrder}`;
+  //     }
+  //     else {
+  //       print = `${print},${webstrateId}=${loadOrder}`;
+  //     }
+  //   });
+  //   console.log(print);
+  // }
+}
+
 const selector = 'wscript[type="webstrate/javascript"],wlink[type="webstrate/css"]';
 
 // Wait for main webstrate to be loaded.
@@ -12,7 +72,7 @@ webstrate.on("loaded", () => {
   // console.debug('webstrates external script library loaded document=%o, window=%o', document, window.location.href);
 
   let currentLoadOrderIndex = -1;
-  const iframeQueue = [];
+  const iframeQueue = new LoadOrderQueue();
 
   // Add transient container to load external scripts.
   const transient = document.createElement('transient');
@@ -33,27 +93,31 @@ webstrate.on("loaded", () => {
 
     const iframe = document.querySelector('transient iframe[webstrate-id="' + webstrateId + '"]');
     if (iframe) {
-      console.log('loaded %o', webstrateId);
       const loadOrder = parseInt(iframe.getAttribute('load-order'));
+      // console.log('loaded %o which has load order %i', webstrateId, loadOrder);
 
       if ((currentLoadOrderIndex + 1) >= loadOrder) {
         ++currentLoadOrderIndex;
+
         execute(iframe);
 
-        for (let i = 0; i < iframeQueue.length; i++) {
-          const iframe = iframeQueue[i];
+        const executedIFrames = [];
+        iframeQueue.forEach((iframe, index) => {
           const loadOrder = parseInt(iframe.getAttribute('load-order'));
           if ((currentLoadOrderIndex + 1) >= loadOrder) {
-            ++currentLoadOrderIndex;
-            iframeQueue.splice(i, 1);
-            --i;
+            executedIFrames.push(iframe);
             execute(iframe);
+            ++currentLoadOrderIndex;
           }
-        }
+        });
+
+        executedIFrames.forEach(iframe => {
+          iframeQueue.remove(iframe);
+        });
       }
       else {
         // Content loaded but has to be queued because its off loading order.
-        iframeQueue.push(iframe);
+        iframeQueue.add(iframe);
       }
     }
   });
@@ -69,7 +133,8 @@ webstrate.on("loaded", () => {
     const contentType = iframe.getAttribute('content-type');
     const contentId = iframe.getAttribute('content-id');
 
-    console.log('executing %o', webstrateId);
+    // console.log('executing %o in load order %o and queue has %i', webstrateId, currentLoadOrderIndex, iframeQueue.length);
+    // iframeQueue.print();
 
     const contentElement = frameDocument.querySelector(`#${contentId}`);
     if (!contentElement) {

@@ -1,4 +1,8 @@
-"use strict";
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
  * Returns true if ECMA2015 is supported by the browser.
@@ -7,6 +11,75 @@ var isECMA2015Supported = function isECMA2015Supported() {
   return "fetch" in window;
 };
 
+var LoadOrderQueue = function () {
+  function LoadOrderQueue() {
+    _classCallCheck(this, LoadOrderQueue);
+
+    this._queue = [];
+  }
+
+  _createClass(LoadOrderQueue, [{
+    key: 'add',
+    value: function add(iframe) {
+
+      var loadOrder = parseInt(iframe.getAttribute('load-order'));
+
+      var index = this._queue.findIndex(function (queuedIFrame) {
+        var queueIFrameLoadOrder = parseInt(queuedIFrame.getAttribute('load-order'));
+        return loadOrder < queueIFrameLoadOrder;
+      });
+
+      // console.log('add iframe at index %i', index);
+      if (index < 0) {
+        this._queue.push(iframe);
+      } else {
+        this._queue.splice(index, 0, iframe);
+      }
+
+      // this.print();
+    }
+  }, {
+    key: 'remove',
+    value: function remove(iframe) {
+      var idx = void 0;
+      if ((idx = idx = this._queue.indexOf(iframe)) > -1) {
+        this._queue.splice(idx, 1);
+      }
+
+      // this.print();
+    }
+  }, {
+    key: 'forEach',
+    value: function forEach(func) {
+      return this._queue.forEach(func);
+    }
+  }, {
+    key: 'length',
+    get: function get() {
+      return this._queue.length;
+    }
+
+    // print() {
+    //   let print = '';
+    //   this._queue.forEach(iframe => {
+    //     const webstrateId = iframe.getAttribute('webstrate-id');
+    //     const loadOrder = parseInt(iframe.getAttribute('load-order'));
+
+    //     if (print === "") {
+    //       print = `${webstrateId}=${loadOrder}`;
+    //     }
+    //     else {
+    //       print = `${print},${webstrateId}=${loadOrder}`;
+    //     }
+    //   });
+    //   console.log(print);
+    // }
+
+  }]);
+
+  return LoadOrderQueue;
+}();
+
 var selector = 'wscript[type="webstrate/javascript"],wlink[type="webstrate/css"]';
 
 // Wait for main webstrate to be loaded.
@@ -14,7 +87,7 @@ webstrate.on("loaded", function () {
   // console.debug('webstrates external script library loaded document=%o, window=%o', document, window.location.href);
 
   var currentLoadOrderIndex = -1;
-  var iframeQueue = [];
+  var iframeQueue = new LoadOrderQueue();
 
   // Add transient container to load external scripts.
   var transient = document.createElement('transient');
@@ -35,26 +108,32 @@ webstrate.on("loaded", function () {
 
     var iframe = document.querySelector('transient iframe[webstrate-id="' + webstrateId + '"]');
     if (iframe) {
-      console.log('loaded %o', webstrateId);
       var loadOrder = parseInt(iframe.getAttribute('load-order'));
+      // console.log('loaded %o which has load order %i', webstrateId, loadOrder);
 
       if (currentLoadOrderIndex + 1 >= loadOrder) {
-        ++currentLoadOrderIndex;
-        execute(iframe);
+        (function () {
+          ++currentLoadOrderIndex;
 
-        for (var i = 0; i < iframeQueue.length; i++) {
-          var _iframe = iframeQueue[i];
-          var _loadOrder = parseInt(_iframe.getAttribute('load-order'));
-          if (currentLoadOrderIndex + 1 >= _loadOrder) {
-            ++currentLoadOrderIndex;
-            iframeQueue.splice(i, 1);
-            --i;
-            execute(_iframe);
-          }
-        }
+          execute(iframe);
+
+          var executedIFrames = [];
+          iframeQueue.forEach(function (iframe, index) {
+            var loadOrder = parseInt(iframe.getAttribute('load-order'));
+            if (currentLoadOrderIndex + 1 >= loadOrder) {
+              executedIFrames.push(iframe);
+              execute(iframe);
+              ++currentLoadOrderIndex;
+            }
+          });
+
+          executedIFrames.forEach(function (iframe) {
+            iframeQueue.remove(iframe);
+          });
+        })();
       } else {
         // Content loaded but has to be queued because its off loading order.
-        iframeQueue.push(iframe);
+        iframeQueue.add(iframe);
       }
     }
   });
@@ -70,11 +149,12 @@ webstrate.on("loaded", function () {
     var contentType = iframe.getAttribute('content-type');
     var contentId = iframe.getAttribute('content-id');
 
-    console.log('executing %o', webstrateId);
+    // console.log('executing %o in load order %o and queue has %i', webstrateId, currentLoadOrderIndex, iframeQueue.length);
+    // iframeQueue.print();
 
-    var contentElement = frameDocument.querySelector("#" + contentId);
+    var contentElement = frameDocument.querySelector('#' + contentId);
     if (!contentElement) {
-      console.warn("Element pre#" + contentId + " in webstrate " + webstrateId + " not found. Ignore loading contents.");
+      console.warn('Element pre#' + contentId + ' in webstrate ' + webstrateId + ' not found. Ignore loading contents.');
       return;
     }
 
@@ -84,7 +164,7 @@ webstrate.on("loaded", function () {
     var container = document.createElement("transient");
     sourceElement.appendChild(container);
 
-    var content = frameDocument.querySelector("#" + contentId).innerText;
+    var content = frameDocument.querySelector('#' + contentId).innerText;
     if (content) {
       switch (contentType) {
         case "webstrate/javascript":
@@ -106,7 +186,7 @@ webstrate.on("loaded", function () {
     container.appendChild(script);
 
     // Add sourcemap functionality to script
-    content = content + "\n//# sourceURL=" + webstrateId;
+    content = content + '\n//# sourceURL=' + webstrateId;
 
     if (!isECMA2015Supported() && Babel) {
       // console.debug(`Transforming content to XXX compatible JavaScript.`);
@@ -178,7 +258,7 @@ webstrate.on("loaded", function () {
 
       var contentType = externalWebstrate.getAttribute('type');
       if (!contentType) {
-        console.warn("Missing content type attribute on " + webstrateId + " reference. It should either be type=\"webstrate/javascript\" or type=\"webstrate/css\".");
+        console.warn('Missing content type attribute on ' + webstrateId + ' reference. It should either be type="webstrate/javascript" or type="webstrate/css".');
         continue;
       }
 
