@@ -5,8 +5,6 @@ const isECMA2015Supported = function () {
   return ("fetch" in window);
 }
 
-console.debug('webstrates external script library loaded');
-
 const wscriptsSelector = 'wscript[type="webstrate/javascript"]';
 const wlinksSelector = 'wlink[type="webstrate/css"]';
 
@@ -179,11 +177,11 @@ webstrate.on("loaded", () => {
 
   // Get all Webstrates external scripts.
   const wscripts = document.querySelectorAll(wscriptsSelector);
-  console.debug(`Found ${wscripts.length} webstrate/javascript scripts. Loading them now.`);
+  // console.debug(`Found ${wscripts.length} webstrate/javascript scripts. Loading them now.`);
   loadExternalWebstrates(wscripts);
 
   // Get all Webstrates external styles.
   const wlinks = document.querySelectorAll(wlinksSelector);
-  console.debug(`Found ${wlinks.length} webstrate/css links. Loading them now.`);
+  // console.debug(`Found ${wlinks.length} webstrate/css links. Loading them now.`);
   loadExternalWebstrates(wlinks);
 });

@@ -7,8 +7,6 @@ var isECMA2015Supported = function isECMA2015Supported() {
   return "fetch" in window;
 };
 
-console.debug('webstrates external script library loaded');
-
 var wscriptsSelector = 'wscript[type="webstrate/javascript"]';
 var wlinksSelector = 'wlink[type="webstrate/css"]';
 
@@ -181,11 +179,11 @@ webstrate.on("loaded", function () {
 
   // Get all Webstrates external scripts.
   var wscripts = document.querySelectorAll(wscriptsSelector);
-  console.debug('Found ' + wscripts.length + ' webstrate/javascript scripts. Loading them now.');
+  // console.debug(`Found ${wscripts.length} webstrate/javascript scripts. Loading them now.`);
   loadExternalWebstrates(wscripts);
 
   // Get all Webstrates external styles.
   var wlinks = document.querySelectorAll(wlinksSelector);
-  console.debug('Found ' + wlinks.length + ' webstrate/css links. Loading them now.');
+  // console.debug(`Found ${wlinks.length} webstrate/css links. Loading them now.`);
   loadExternalWebstrates(wlinks);
 });
