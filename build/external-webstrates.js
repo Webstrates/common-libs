@@ -35,6 +35,7 @@ webstrate.on("loaded", function () {
 
     var iframe = document.querySelector('transient iframe[webstrate-id="' + webstrateId + '"]');
     if (iframe) {
+      console.log('loaded %o', webstrateId);
       var loadOrder = parseInt(iframe.getAttribute('load-order'));
 
       if (currentLoadOrderIndex + 1 >= loadOrder) {
@@ -68,6 +69,8 @@ webstrate.on("loaded", function () {
     var webstrateId = iframe.getAttribute('webstrate-id');
     var contentType = iframe.getAttribute('content-type');
     var contentId = iframe.getAttribute('content-id');
+
+    console.log('executing %o', webstrateId);
 
     var contentElement = frameDocument.querySelector("#" + contentId);
     if (!contentElement) {
