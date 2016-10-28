@@ -175,10 +175,16 @@ webstrate.on("loaded", () => {
     if (!isECMA2015Supported() && Babel) {
       // console.debug(`Transforming content to XXX compatible JavaScript.`);
       content = Babel.transform(content, { presets: ['es2015'] }).code;
+
+      if (Babili) {
+        content = Babili.transform(content).code;
+      }
     }
 
     // window.eval.call(window, content); // It seems that script.innerHTML already evals the content. Great! No explicit eval needed.
-    script.innerHTML = content;
+    // script.innerHTML = content;
+
+    script.insertAdjacentHTML('afterbegin', content);
   };
 
   /**
