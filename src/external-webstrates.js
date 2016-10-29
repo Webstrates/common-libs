@@ -172,19 +172,17 @@ webstrate.on("loaded", () => {
     // Add sourcemap functionality to script
     content = `${content}\n//# sourceURL=${webstrateId}`;
 
-    if (!isECMA2015Supported() && Babel) {
+    if (!isECMA2015Supported() && typeof Babel !== 'undefined' && Babel.transform) {
       // console.debug(`Transforming content to XXX compatible JavaScript.`);
       content = Babel.transform(content, { presets: ['es2015'] }).code;
-
-      if (Babili) {
-        content = Babili.transform(content).code;
-      }
     }
 
-    // window.eval.call(window, content); // It seems that script.innerHTML already evals the content. Great! No explicit eval needed.
-    // script.innerHTML = content;
+    if (typeof window.webstrates && window.webstrates.debug) {
+      console.debug('Executing script with %i charachters.', content.length);
+    }
 
-    script.insertAdjacentHTML('afterbegin', content);
+    var textNode = document.createTextNode(content);
+    script.appendChild(textNode);
   };
 
   /**
