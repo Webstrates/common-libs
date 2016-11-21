@@ -175,7 +175,7 @@
 
         get angle() {
             const rad = Math.atan2(this.b, this.a);
-            const angle = (rad * 180) / Math.PI;
+            return (rad * 180) / Math.PI;
         }
 
         get scaleX() {
@@ -1548,7 +1548,7 @@
          */
         get localRotation() {
             let m = Matrix.identity(3);
-            this.applyToLocalTransform(m);
+            this.applyToLocalTransform(m, RotateTransform);
             return m.angle;
         }
 
@@ -1561,7 +1561,7 @@
          */
         get globalRotation() {
             let m = Matrix.identity(3);
-            this.applyToGlobalTransform(m);
+            this.applyToGlobalTransform(m, RotateTransform);
             return m.angle;
         }
 

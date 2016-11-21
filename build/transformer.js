@@ -491,7 +491,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: 'angle',
             get: function get() {
                 var rad = Math.atan2(this.b, this.a);
-                var angle = rad * 180 / Math.PI;
+                return rad * 180 / Math.PI;
             }
         }, {
             key: 'scaleX',
@@ -1828,7 +1828,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: 'localRotation',
             get: function get() {
                 var m = Matrix.identity(3);
-                this.applyToLocalTransform(m);
+                this.applyToLocalTransform(m, RotateTransform);
                 return m.angle;
             }
 
@@ -1844,7 +1844,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: 'globalRotation',
             get: function get() {
                 var m = Matrix.identity(3);
-                this.applyToGlobalTransform(m);
+                this.applyToGlobalTransform(m, RotateTransform);
                 return m.angle;
             }
 
