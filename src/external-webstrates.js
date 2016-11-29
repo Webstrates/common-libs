@@ -1,5 +1,21 @@
-// Webstrate object will be undefined on webstrate loaded as static webstrate (e.g., /webstrate?static)
+// Webstrate object will be undefined on webstrate loaded as static webstrate (e.g., /webstrate?raw)
 if (typeof webstrate !== 'undefined') {
+
+    // External webstrates count.
+    let externalWebstratesCount = 0;
+
+    /**
+     * Fire external webstrates loaded event on window.
+     */
+    const fireExternalWebstratesLoaded = function() {
+        // Create the event.
+        var event = new CustomEvent('externalwebstratesloaded', {
+            bubbles: false,
+        });
+
+        // target can be any Element or other EventTarget.
+        window.dispatchEvent(event);
+    };
 
     /**
      * Returns true if ECMA2015 is supported by the browser.
@@ -83,14 +99,14 @@ if (typeof webstrate !== 'undefined') {
         // Hide external webstrates
         transient.style.display = 'none';
 
-        const body = document.querySelector('body');
-        body.appendChild(transient);
+        // Append container to load external webstrates.
+        document.body.appendChild(transient);
 
         // Listen to any webstrate that is transcluded in the current window. If the
         // transcluded webstrate is a webstrate loaded by definition of a <wscript />
         // tag, then the content in the #webstrate element is received, eventually
         // transformed using babel, and executed in the window context.
-        webstrate.on('transcluded', webstrateId => {
+        webstrate.on("transcluded", webstrateId => {
             // console.debug(`transcluded ${webstrateId} in ${window.location.href}`);
 
             const iframe = document.querySelector('transient iframe[webstrate-id="' + webstrateId + '"]');
@@ -120,6 +136,11 @@ if (typeof webstrate !== 'undefined') {
                     // Content loaded but has to be queued because its off loading order.
                     iframeQueue.add(iframe);
                 }
+            }
+
+            // Check if all external webstrates have been loaded and executed.
+            if (externalWebstratesCount === currentLoadOrderIndex + 1) {
+                fireExternalWebstratesLoaded();
             }
         });
 
@@ -233,8 +254,18 @@ if (typeof webstrate !== 'undefined') {
          * @param NodeList externalWebstrates A list of external webstrates to load.
          */
         const loadExternalWebstrates = function(externalWebstrates) {
-            for (let i = 0; i < externalWebstrates.length; i++) {
-                let externalWebstrate = externalWebstrates[i];
+
+            // Number of external webstrates, which is used to trigger external webstrates loaded event.
+            externalWebstratesCount = externalWebstrates.length;
+
+            // No external webstrates to load.
+            if (externalWebstratesCount === 0) {
+                fireExternalWebstratesLoaded();
+                return;
+            }
+
+            // Load all external webstrates in an iframe.
+            Array.from(externalWebstrates).forEach((externalWebstrate, i) => {
 
                 const src = externalWebstrate.getAttribute('src');
 
@@ -248,7 +279,7 @@ if (typeof webstrate !== 'undefined') {
                 const contentType = externalWebstrate.getAttribute('type');
                 if (!contentType) {
                     console.warn(`Missing content type attribute on ${webstrateId} reference. It should either be type="webstrate/javascript" or type="webstrate/css".`);
-                    continue;
+                    return;
                 }
 
                 // Element that contains the script or css definition. (the content has to be plain text)
@@ -279,11 +310,12 @@ if (typeof webstrate !== 'undefined') {
 
                 // Load external script.
                 transient.appendChild(iframe);
-            }
+            });
         };
 
         // Get all external webstrates.
         const externalWebstrates = document.querySelectorAll(selector);
+
         // console.debug(`Found ${externalWebstrates.length} external webstrates. Loading them now.`);
         loadExternalWebstrates(externalWebstrates);
     });
