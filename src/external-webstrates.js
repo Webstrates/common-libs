@@ -111,22 +111,20 @@
             webstrate.on("transcluded", webstrateId => {
                 // console.debug(`transcluded ${webstrateId} in ${window.location.href}`);
 
-                const getFirstReadyFrame = (iframes) => {
+                const getTranscludedExternalWebstrate = () => {
+                    const iframes = document.querySelectorAll('transient[type="external-webstrates-iframes"] iframe[webstrate-id="' + webstrateId + '"]:not([handled="true"])');
+
                     let readyIframe;
                     Array.from(iframes).forEach(iframe => {
-                        var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-
-                        // Check if loading is complete
-                        if (iframeDocument.readyState === "complete") {
+                        const iframeWindow = iframe.contentWindow;
+                        if (iframeWindow.webstrate && iframeWindow.webstrate.transcluded) {
                             readyIframe = iframe;
                         }
                     });
                     return readyIframe;
                 }
 
-                const iframes = document.querySelectorAll('transient[type="external-webstrates-iframes"] iframe[webstrate-id="' + webstrateId + '"]:not([handled="true"])');
-                const iframe = getFirstReadyFrame(iframes);
-
+                const iframe = getTranscludedExternalWebstrate();
                 if (iframe) {
                     iframe.setAttribute("handled", "true");
 

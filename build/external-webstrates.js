@@ -130,22 +130,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 webstrate.on("transcluded", function (webstrateId) {
                     // console.debug(`transcluded ${webstrateId} in ${window.location.href}`);
 
-                    var getFirstReadyFrame = function getFirstReadyFrame(iframes) {
+                    var getTranscludedExternalWebstrate = function getTranscludedExternalWebstrate() {
+                        var iframes = document.querySelectorAll('transient[type="external-webstrates-iframes"] iframe[webstrate-id="' + webstrateId + '"]:not([handled="true"])');
+
                         var readyIframe = void 0;
                         Array.from(iframes).forEach(function (iframe) {
-                            var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-
-                            // Check if loading is complete
-                            if (iframeDocument.readyState === "complete") {
+                            var iframeWindow = iframe.contentWindow;
+                            if (iframeWindow.webstrate && iframeWindow.webstrate.transcluded) {
                                 readyIframe = iframe;
                             }
                         });
                         return readyIframe;
                     };
 
-                    var iframes = document.querySelectorAll('transient[type="external-webstrates-iframes"] iframe[webstrate-id="' + webstrateId + '"]:not([handled="true"])');
-                    var iframe = getFirstReadyFrame(iframes);
-
+                    var iframe = getTranscludedExternalWebstrate();
                     if (iframe) {
                         iframe.setAttribute("handled", "true");
 
