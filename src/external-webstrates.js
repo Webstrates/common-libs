@@ -111,7 +111,22 @@
             webstrate.on("transcluded", webstrateId => {
                 // console.debug(`transcluded ${webstrateId} in ${window.location.href}`);
 
-                const iframe = document.querySelector('transient[type="external-webstrates-iframes"] iframe[webstrate-id="' + webstrateId + '"]:not([handled="true"])');
+                const getFirstReadyFrame = (iframes) => {
+                    let readyIframe;
+                    Array.from(iframes).forEach(iframe => {
+                        var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+
+                        // Check if loading is complete
+                        if (iframeDocument.readyState === "complete") {
+                            readyIframe = iframe;
+                        }
+                    });
+                    return readyIframe;
+                }
+
+                const iframes = document.querySelectorAll('transient[type="external-webstrates-iframes"] iframe[webstrate-id="' + webstrateId + '"]:not([handled="true"])');
+                const iframe = getFirstReadyFrame(iframes);
+
                 if (iframe) {
                     iframe.setAttribute("handled", "true");
 

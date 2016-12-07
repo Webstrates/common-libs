@@ -130,7 +130,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 webstrate.on("transcluded", function (webstrateId) {
                     // console.debug(`transcluded ${webstrateId} in ${window.location.href}`);
 
-                    var iframe = document.querySelector('transient[type="external-webstrates-iframes"] iframe[webstrate-id="' + webstrateId + '"]:not([handled="true"])');
+                    var getFirstReadyFrame = function getFirstReadyFrame(iframes) {
+                        var readyIframe = void 0;
+                        Array.from(iframes).forEach(function (iframe) {
+                            var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+
+                            // Check if loading is complete
+                            if (iframeDocument.readyState === "complete") {
+                                readyIframe = iframe;
+                            }
+                        });
+                        return readyIframe;
+                    };
+
+                    var iframes = document.querySelectorAll('transient[type="external-webstrates-iframes"] iframe[webstrate-id="' + webstrateId + '"]:not([handled="true"])');
+                    var iframe = getFirstReadyFrame(iframes);
+
                     if (iframe) {
                         iframe.setAttribute("handled", "true");
 
