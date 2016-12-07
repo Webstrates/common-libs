@@ -96,7 +96,7 @@
 
             // Add transient container to load external scripts.
             const transient = document.createElement('transient');
-            transient.setAttribute('type', 'webstrates-external-scripts');
+            transient.setAttribute('type', 'external-webstrates-iframes');
 
             // Hide external webstrates
             transient.style.display = 'none';
@@ -111,8 +111,10 @@
             webstrate.on("transcluded", webstrateId => {
                 // console.debug(`transcluded ${webstrateId} in ${window.location.href}`);
 
-                const iframe = document.querySelector('transient iframe[webstrate-id="' + webstrateId + '"]');
+                const iframe = document.querySelector('transient[type="external-webstrates-iframes"] iframe[webstrate-id="' + webstrateId + '"]:not([handled="true"])');
                 if (iframe) {
+                    iframe.setAttribute("handled", "true");
+
                     const loadOrder = parseInt(iframe.getAttribute('load-order'));
                     // console.log('loaded %o which has load order %i', webstrateId, loadOrder);
 
