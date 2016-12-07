@@ -102,7 +102,7 @@ if (typeof webstrate !== 'undefined') {
             return LoadOrderQueue;
         }();
 
-        var selector = 'wscript[type="webstrate/javascript"],wlink[type="webstrate/css"]';
+        var selector = 'script[type="webstrate/javascript"],link[type="webstrate/css"],wscript[type="webstrate/javascript"],wlink[type="webstrate/css"]';
 
         // Wait for main webstrate to be loaded.
         webstrate.on("loaded", function () {
@@ -288,7 +288,14 @@ if (typeof webstrate !== 'undefined') {
                 // Load all external webstrates in an iframe.
                 Array.from(externalWebstrates).forEach(function (externalWebstrate, i) {
 
+                    if (externalWebstrate.tagName.toLowerCase() === "wscript" || externalWebstrate.tagName.toLowerCase() === "wlink") {
+                        console.warn('<wscript></wscript> and <wlink /> are @deprecated. Use <script type="webstrate/javascript" src="SOURCE"></script> or <link type="webstrate/css" href="SOURCE" />');
+                    }
+
                     var src = externalWebstrate.getAttribute('src');
+                    if (externalWebstrate.tagName.toLowerCase() === "link") {
+                        src = externalWebstrate.getAttribute('href');
+                    }
 
                     // Get only webstrate id if webstrate script is defined with as absolute or relative path.
                     var webstrateId = src;
