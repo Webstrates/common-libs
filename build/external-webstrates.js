@@ -198,7 +198,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                     var contentElement = frameDocument.querySelector('#' + contentId);
                     if (!contentElement) {
-                        console.warn('Element pre#' + contentId + ' in webstrate ' + webstrateId + ' not found. Ignore loading contents.');
+                        console.warn('Element id="' + contentId + '" in webstrate ' + webstrateId + ' not found. Ignore loading contents.');
                         return;
                     }
 
@@ -208,7 +208,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     var container = document.createElement("transient");
                     sourceElement.appendChild(container);
 
-                    var content = frameDocument.querySelector('#' + contentId).innerText;
+                    var content = contentElement.innerText;
                     if (content) {
                         switch (contentType) {
                             case "webstrate/javascript":

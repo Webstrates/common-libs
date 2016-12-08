@@ -177,7 +177,7 @@
 
                 const contentElement = frameDocument.querySelector(`#${contentId}`);
                 if (!contentElement) {
-                    console.warn(`Element pre#${contentId} in webstrate ${webstrateId} not found. Ignore loading contents.`);
+                    console.warn(`Element id="${contentId}" in webstrate ${webstrateId} not found. Ignore loading contents.`);
                     return;
                 }
 
@@ -187,7 +187,7 @@
                 const container = document.createElement("transient");
                 sourceElement.appendChild(container);
 
-                let content = frameDocument.querySelector(`#${contentId}`).innerText;
+                let content = contentElement.innerText;
                 if (content) {
                     switch (contentType) {
                         case "webstrate/javascript":
