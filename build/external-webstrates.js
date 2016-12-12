@@ -104,7 +104,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 return LoadOrderQueue;
             }();
 
-            var selector = 'script[type="webstrate/javascript"],link[type="webstrate/css"],wscript[type="webstrate/javascript"],wlink[type="webstrate/css"]';
+            var externalWebstrateSelector = 'script[type="webstrate/javascript"],link[type="webstrate/css"],wscript[type="webstrate/javascript"],wlink[type="webstrate/css"]';
+
+            var getContent = function getContent(contentElements) {
+                return Array.from(contentElements).map(function (contentElement) {
+                    return contentElement.innerText;
+                }).join('\n\n');
+            };
 
             // Wait for main webstrate to be loaded.
             webstrate.on("loaded", function () {
@@ -191,14 +197,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     var frameDocument = iframe.contentDocument;
                     var webstrateId = iframe.getAttribute('webstrate-id');
                     var contentType = iframe.getAttribute('content-type');
-                    var contentId = iframe.getAttribute('content-id');
+                    var selector = iframe.getAttribute('selector');
 
                     // console.log('executing %o in load order %o and queue has %i', webstrateId, currentLoadOrderIndex, iframeQueue.length);
                     // iframeQueue.print();
 
-                    var contentElement = frameDocument.querySelector('#' + contentId);
-                    if (!contentElement) {
-                        console.warn('Element id="' + contentId + '" in webstrate ' + webstrateId + ' not found. Ignore loading contents.');
+                    var contentElements = frameDocument.querySelectorAll(selector);
+                    if (!contentElements || !contentElements.length) {
+                        console.warn('No element for selector "' + selector + '" found in webstrate ' + webstrateId + '. Ignore loading contents.');
                         return;
                     }
 
@@ -208,14 +214,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     var container = document.createElement("transient");
                     sourceElement.appendChild(container);
 
-                    var content = contentElement.innerText;
+                    // Iterate through all elements and execute their contents.
+                    var content = getContent(contentElements);
+
                     if (content) {
                         switch (contentType) {
                             case "webstrate/javascript":
-                                executeJavaScript(webstrateId, container, content);
+                                executeJavaScript(webstrateId, selector, container, content);
                                 break;
                             case "webstrate/css":
-                                executeCss(webstrateId, container, content, contentElement);
+                                executeCss(webstrateId, selector, container, content, contentElements);
                                 break;
                         }
                     }
@@ -224,13 +232,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 /**
                  * @param  {} content
                  */
-                var executeJavaScript = function executeJavaScript(webstrateId, container, content) {
+                var executeJavaScript = function executeJavaScript(webstrateId, selector, container, content) {
 
                     var script = document.createElement("script");
                     container.appendChild(script);
 
                     // Add sourcemap functionality to script
                     content = content + '\n//# sourceURL=' + webstrateId;
+
+                    // Append selector to sourcemap to distinguish code.
+                    if (selector) {
+                        content += selector;
+                    }
 
                     if (!isECMA2015Supported() && typeof Babel !== 'undefined' && Babel.transform) {
                         // console.debug(`Transforming content to XXX compatible JavaScript.`);
@@ -247,8 +260,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 /**
                  * @param  {} content
+                 * TODO Optimize style replacement on mutations. Use a text node for each target in targets and then replace
+                 * a text node's content when the corresponding target mutates.
                  */
-                var executeCss = function executeCss(webstrateId, container, content, target) {
+                var executeCss = function executeCss(webstrateId, selector, container, content, targets) {
 
                     // Apply styles
                     var applyStyles = function applyStyles(content) {
@@ -266,12 +281,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     // Add the <style> element to the page
                     container.appendChild(style);
 
-                    // Create an observer instance to listen for changes on the external webstrate.
-                    var observer = new MutationObserver(function (mutations) {
-                        applyStyles(target.innerText);
-                    });
-
-                    // configuration of the observer:
+                    // Configuration of the observer:
                     var config = {
                         childList: true,
                         attributes: true,
@@ -281,8 +291,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         characterDataOldValue: true
                     };
 
-                    // Pass in the target node, as well as the observer options
-                    observer.observe(target, config);
+                    Array.from(targets).forEach(function (target) {
+
+                        // Create an observer instance to listen for changes on the external webstrate.
+                        var observer = new MutationObserver(function (mutations) {
+                            // Iterate through all elements and execute their contents.
+                            var content = getContent(targets);
+                            applyStyles(content);
+                        });
+
+                        // Pass in the target node, as well as the observer options
+                        observer.observe(target, config);
+                    });
                 };
 
                 /**
@@ -339,8 +359,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                             return;
                         }
 
-                        // Element that contains the script or css definition. (the content has to be plain text)
-                        var contentId = externalWebstrate.getAttribute('content-id') || 'webstrate';
+                        // Selector for element(s) that contain(s) the script(s) or css definition(s). (the content has to be plain text)
+                        var selector = externalWebstrate.getAttribute('selector') || '#webstrate';
 
                         // Create iframe to load external script.
                         var iframe = document.createElement('iframe');
@@ -355,9 +375,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         // TODO: Ideally the content-type attribute is set on the <pre /> element in the external webstrate that holds the actual content.
                         iframe.setAttribute('content-type', contentType);
 
-                        // The content-id defines the script content container in the extenal script webstrate. It defaults
+                        // The selector defines the script or style content container in the external webstrate. It defaults
                         // to #webstrate.
-                        iframe.setAttribute('content-id', contentId);
+                        iframe.setAttribute('selector', selector);
 
                         // Define the external webstrate as source.
                         iframe.setAttribute('src', src);
@@ -371,7 +391,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 };
 
                 // Get all external webstrates.
-                var externalWebstrates = document.querySelectorAll(selector);
+                var externalWebstrates = document.querySelectorAll(externalWebstrateSelector);
 
                 // console.debug(`Found ${externalWebstrates.length} external webstrates. Loading them now.`);
                 loadExternalWebstrates(externalWebstrates);
