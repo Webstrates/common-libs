@@ -44,7 +44,7 @@
          * Returns true if ECMA2015 is supported by the browser.
          */
         const isECMA2015Supported = function () {
-            return ("fetch" in window);
+            return ("fetch" in window || "Promise" in window);
         }
 
         class LoadOrderQueue {
@@ -426,5 +426,5 @@
 
     // Export module.
     exports.Transclusion = module;
-    
+
 }).call({}, window);
