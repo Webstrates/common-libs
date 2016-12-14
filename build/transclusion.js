@@ -54,7 +54,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
              * Returns true if ECMA2015 is supported by the browser.
              */
             var isECMA2015Supported = function isECMA2015Supported() {
-                return "fetch" in window;
+                return "fetch" in window || "Promise" in window;
             };
 
             var LoadOrderQueue = function () {
