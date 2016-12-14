@@ -1,13 +1,21 @@
 // Webstrate object will be undefined on webstrate loaded as static webstrate (e.g., /webstrate?raw)
 ;
-(function(exports) {
+(function (exports) {
+
+    // Module storage.
+    const module = {
+        babelConfig: {
+            presets: ['es2015', 'es2016', 'es2017']
+        }
+    };
+
     if (typeof webstrate !== 'undefined') {
 
         const addCSSRule = (sheet, selector, rules, index = 0) => {
-            if("insertRule" in sheet) {
+            if ("insertRule" in sheet) {
                 sheet.insertRule(selector + "{" + rules + "}", index);
             }
-            else if("addRule" in sheet) {
+            else if ("addRule" in sheet) {
                 sheet.addRule(selector, rules, index);
             }
         }
@@ -22,7 +30,7 @@
         /**
          * Fire external webstrates loaded event on window.
          */
-        const fireWebstratesTranscluded = function() {
+        const fireWebstratesTranscluded = function () {
             // Create the event.
             var event = new CustomEvent('externalwebstratesloaded', {
                 bubbles: false,
@@ -35,7 +43,7 @@
         /**
          * Returns true if ECMA2015 is supported by the browser.
          */
-        const isECMA2015Supported = function() {
+        const isECMA2015Supported = function () {
             return ("fetch" in window);
         }
 
@@ -205,10 +213,7 @@
              * @param {any} contentElements
              * @param {any} iframe
              */
-            const transcludeAsIFrame = function(webstrateId, selector, container, contentElements, iframe) {
-                // iframe.remove();
-
-                console.log('HTML');
+            const transcludeAsIFrame = function (webstrateId, selector, container, contentElements, iframe) {
 
                 // Apply styles
                 const appendContent = (content) => {
@@ -248,7 +253,7 @@
             /**
              * @param  {} content
              */
-            const executeJavaScript = function(webstrateId, selector, container, contentElements) {
+            const executeJavaScript = function (webstrateId, selector, container, contentElements) {
 
                 // Get script contents.
                 let content = getContent(contentElements);
@@ -266,7 +271,7 @@
 
                 if (!isECMA2015Supported() && typeof Babel !== 'undefined' && Babel.transform) {
                     // console.debug(`Transforming content to XXX compatible JavaScript.`);
-                    content = Babel.transform(content, { presets: ['es2015'] }).code;
+                    content = Babel.transform(content, module.babelConfig).code;
                 }
 
                 if (typeof window.webstrates && window.webstrates.debug) {
@@ -282,7 +287,7 @@
              * TODO Optimize style replacement on mutations. Use a text node for each target in targets and then replace
              * a text node's content when the corresponding target mutates.
              */
-            const executeCss = function(webstrateId, selector, container, contentElements) {
+            const executeCss = function (webstrateId, selector, container, contentElements) {
 
                 // Apply styles
                 const applyStyles = (content) => {
@@ -333,7 +338,7 @@
              * 
              * @param NodeList transcludees A list of webstrates to load.
              */
-            const transclude = function(transcludees) {
+            module.transclude = function (transcludees) {
 
                 // Number of webstrates, which is used to trigger webstrates transcluded event.
                 webstratesCount = transcludees.length;
@@ -415,10 +420,11 @@
             const transcludees = document.querySelectorAll('transclude');
 
             // console.debug(`Found ${transcludees.length} webstrates. Loading them now.`);
-            transclude(transcludees);
-
-            // Export transclude API.
-            exports.transclude = transclude;
+            module.transclude(transcludees);
         });
     }
+
+    // Export module.
+    exports.Transclusion = module;
+    
 }).call({}, window);

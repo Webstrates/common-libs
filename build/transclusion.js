@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
@@ -9,6 +9,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 // Webstrate object will be undefined on webstrate loaded as static webstrate (e.g., /webstrate?raw)
 ;
 (function (exports) {
+
+    // Module storage.
+    var module = {
+        babelConfig: {
+            presets: ['es2015', 'es2016', 'es2017']
+        }
+    };
+
     if (typeof webstrate !== 'undefined') {
         (function () {
 
@@ -57,7 +65,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 }
 
                 _createClass(LoadOrderQueue, [{
-                    key: "add",
+                    key: 'add',
                     value: function add(iframe) {
 
                         var loadOrder = parseInt(iframe.getAttribute('load-order'));
@@ -74,7 +82,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         }
                     }
                 }, {
-                    key: "remove",
+                    key: 'remove',
                     value: function remove(iframe) {
                         var idx = void 0;
                         if ((idx = idx = this._queue.indexOf(iframe)) > -1) {
@@ -82,12 +90,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         }
                     }
                 }, {
-                    key: "forEach",
+                    key: 'forEach',
                     value: function forEach(func) {
                         return this._queue.forEach(func);
                     }
                 }, {
-                    key: "length",
+                    key: 'length',
                     get: function get() {
                         return this._queue.length;
                     }
@@ -194,7 +202,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                     var contentElements = frameDocument.querySelectorAll(selector);
                     if (!contentElements || !contentElements.length) {
-                        console.warn("No element for selector \"" + selector + "\" found in webstrate " + webstrateId + ". Ignore loading contents.");
+                        console.warn('No element for selector "' + selector + '" found in webstrate ' + webstrateId + '. Ignore loading contents.');
                         return;
                     }
 
@@ -227,9 +235,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                  * @param {any} iframe
                  */
                 var transcludeAsIFrame = function transcludeAsIFrame(webstrateId, selector, container, contentElements, iframe) {
-                    // iframe.remove();
-
-                    console.log('HTML');
 
                     // Apply styles
                     var appendContent = function appendContent(content) {
@@ -278,7 +283,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     container.appendChild(script);
 
                     // Add sourcemap functionality to script
-                    content = content + "\n//# sourceURL=" + webstrateId;
+                    content = content + '\n//# sourceURL=' + webstrateId;
 
                     // Append selector to sourcemap to distinguish code.
                     if (selector) {
@@ -287,7 +292,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                     if (!isECMA2015Supported() && typeof Babel !== 'undefined' && Babel.transform) {
                         // console.debug(`Transforming content to XXX compatible JavaScript.`);
-                        content = Babel.transform(content, { presets: ['es2015'] }).code;
+                        content = Babel.transform(content, module.babelConfig).code;
                     }
 
                     if (_typeof(window.webstrates) && window.webstrates.debug) {
@@ -354,7 +359,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                  * 
                  * @param NodeList transcludees A list of webstrates to load.
                  */
-                var transclude = function transclude(transcludees) {
+                module.transclude = function (transcludees) {
 
                     // Number of webstrates, which is used to trigger webstrates transcluded event.
                     webstratesCount = transcludees.length;
@@ -436,11 +441,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 var transcludees = document.querySelectorAll('transclude');
 
                 // console.debug(`Found ${transcludees.length} webstrates. Loading them now.`);
-                transclude(transcludees);
-
-                // Export transclude API.
-                exports.transclude = transclude;
+                module.transclude(transcludees);
             });
         })();
     }
+
+    // Export module.
+    exports.Transclusion = module;
 }).call({}, window);
