@@ -85,7 +85,13 @@
             // }
         }
 
-        const selector = 'script[type="webstrate/javascript"],link[type="webstrate/css"],wscript[type="webstrate/javascript"],wlink[type="webstrate/css"]';
+        const externalWebstrateSelector = 'script[type="webstrate/javascript"],link[type="webstrate/css"],wscript[type="webstrate/javascript"],wlink[type="webstrate/css"]';
+
+        const getContent = (contentElements) => {
+            return Array.from(contentElements).map(contentElement => {
+                return contentElement.innerText;
+            }).join('\n\n');
+        }
 
         // Wait for main webstrate to be loaded.
         webstrate.on("loaded", () => {
@@ -170,14 +176,14 @@
                 const frameDocument = iframe.contentDocument;
                 const webstrateId = iframe.getAttribute('webstrate-id');
                 const contentType = iframe.getAttribute('content-type');
-                const contentId = iframe.getAttribute('content-id');
+                const selector = iframe.getAttribute('selector');
 
                 // console.log('executing %o in load order %o and queue has %i', webstrateId, currentLoadOrderIndex, iframeQueue.length);
                 // iframeQueue.print();
 
-                const contentElement = frameDocument.querySelector(`#${contentId}`);
-                if (!contentElement) {
-                    console.warn(`Element id="${contentId}" in webstrate ${webstrateId} not found. Ignore loading contents.`);
+                const contentElements = frameDocument.querySelectorAll(selector);
+                if (!contentElements || !contentElements.length) {
+                    console.warn(`No element for selector "${selector}" found in webstrate ${webstrateId}. Ignore loading contents.`);
                     return;
                 }
 
@@ -187,14 +193,16 @@
                 const container = document.createElement("transient");
                 sourceElement.appendChild(container);
 
-                let content = contentElement.innerText;
+                // Iterate through all elements and execute their contents.
+                const content = getContent(contentElements);
+
                 if (content) {
                     switch (contentType) {
                         case "webstrate/javascript":
-                            executeJavaScript(webstrateId, container, content);
+                            executeJavaScript(webstrateId, selector, container, content);
                             break;
                         case "webstrate/css":
-                            executeCss(webstrateId, container, content, contentElement);
+                            executeCss(webstrateId, selector, container, content, contentElements);
                             break;
                     }
                 }
@@ -203,13 +211,18 @@
             /**
              * @param  {} content
              */
-            const executeJavaScript = function(webstrateId, container, content) {
+            const executeJavaScript = function(webstrateId, selector, container, content) {
 
                 const script = document.createElement("script");
                 container.appendChild(script);
 
                 // Add sourcemap functionality to script
                 content = `${content}\n//# sourceURL=${webstrateId}`;
+
+                // Append selector to sourcemap to distinguish code.
+                if (selector) {
+                    content += selector;
+                }
 
                 if (!isECMA2015Supported() && typeof Babel !== 'undefined' && Babel.transform) {
                     // console.debug(`Transforming content to XXX compatible JavaScript.`);
@@ -226,8 +239,10 @@
 
             /**
              * @param  {} content
+             * TODO Optimize style replacement on mutations. Use a text node for each target in targets and then replace
+             * a text node's content when the corresponding target mutates.
              */
-            const executeCss = function(webstrateId, container, content, target) {
+            const executeCss = function(webstrateId, selector, container, content, targets) {
 
                 // Apply styles
                 const applyStyles = (content) => {
@@ -245,12 +260,7 @@
                 // Add the <style> element to the page
                 container.appendChild(style);
 
-                // Create an observer instance to listen for changes on the external webstrate.
-                const observer = new MutationObserver(mutations => {
-                    applyStyles(target.innerText);
-                });
-
-                // configuration of the observer:
+                // Configuration of the observer:
                 var config = {
                     childList: true,
                     attributes: true,
@@ -260,8 +270,18 @@
                     characterDataOldValue: true
                 };
 
-                // Pass in the target node, as well as the observer options
-                observer.observe(target, config);
+                Array.from(targets).forEach(target => {
+
+                    // Create an observer instance to listen for changes on the external webstrate.
+                    const observer = new MutationObserver(mutations => {
+                        // Iterate through all elements and execute their contents.
+                        const content = getContent(targets);
+                        applyStyles(content);
+                    });
+
+                    // Pass in the target node, as well as the observer options
+                    observer.observe(target, config);
+                });
             };
 
             /**
@@ -318,8 +338,8 @@
                         return;
                     }
 
-                    // Element that contains the script or css definition. (the content has to be plain text)
-                    const contentId = externalWebstrate.getAttribute('content-id') || 'webstrate';
+                    // Selector for element(s) that contain(s) the script(s) or css definition(s). (the content has to be plain text)
+                    const selector = externalWebstrate.getAttribute('selector') || '#webstrate';
 
                     // Create iframe to load external script.
                     const iframe = document.createElement('iframe');
@@ -334,9 +354,9 @@
                     // TODO: Ideally the content-type attribute is set on the <pre /> element in the external webstrate that holds the actual content.
                     iframe.setAttribute('content-type', contentType);
 
-                    // The content-id defines the script content container in the extenal script webstrate. It defaults
+                    // The selector defines the script or style content container in the external webstrate. It defaults
                     // to #webstrate.
-                    iframe.setAttribute('content-id', contentId);
+                    iframe.setAttribute('selector', selector);
 
                     // Define the external webstrate as source.
                     iframe.setAttribute('src', src);
@@ -350,8 +370,7 @@
             };
 
             // Get all external webstrates.
-            const externalWebstrates = document.querySelectorAll(selector);
-
+            const externalWebstrates = document.querySelectorAll(externalWebstrateSelector);
 
             // console.debug(`Found ${externalWebstrates.length} external webstrates. Loading them now.`);
             loadExternalWebstrates(externalWebstrates);
