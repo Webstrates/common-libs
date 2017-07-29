@@ -1638,12 +1638,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-               * tbd.
-               * 
-               * @returns
-               * 
-               * @memberOf Transformer
-               */
+                   * tbd.
+                   * 
+                   * @returns
+                   * 
+                   * @memberOf Transformer
+                   */
 
         }, {
             key: 'getTransformHierarchy',
@@ -1669,8 +1669,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             /**
              * tbd.
-               * 
-               * @returns
+                   * 
+                   * @returns
              *
              * @memberOf Transformer
              */
@@ -1689,12 +1689,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-               * tbd.
-               * 
-               * @param {any} m
-               * 
-               * @memberOf Transformer
-               */
+                   * tbd.
+                   * @param {any} m
+                   * 
+                   * @memberOf Transformer
+                   */
 
         }, {
             key: 'applyToLocalTransform',
