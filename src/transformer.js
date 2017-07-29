@@ -1404,12 +1404,12 @@
         }
 
 		/**
-     * tbd.
-     * 
-     * @returns
-     * 
-     * @memberOf Transformer
-     */
+         * tbd.
+         * 
+         * @returns
+         * 
+         * @memberOf Transformer
+         */
         getTransformHierarchy() {
             const allTransformers = [];
 
@@ -1433,8 +1433,8 @@
 
 		/**
 		 * tbd.
-     * 
-     * @returns
+         * 
+         * @returns
 		 *
 		 * @memberOf Transformer
 		 */
@@ -1451,12 +1451,11 @@
         }
 
 		/**
-     * tbd.
-     * 
-     * @param {any} m
-     * 
-     * @memberOf Transformer
-     */
+         * tbd.
+         * @param {any} m
+         * 
+         * @memberOf Transformer
+         */
         applyToLocalTransform(m, type = null) {
             this._transforms.apply(m, type);
 
