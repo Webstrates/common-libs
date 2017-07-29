@@ -20,7 +20,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     // Module object holding private variables.
     var module = {};
 
-    console.warn('The transformer.js library is very much in flux. Do not use this API if you are not willing to adjust your code to the yet frequently changing Transformer API! Sk\xE5l!');
+    console.warn('The transformer.js library is very much in flux. Do not use this API if you are not willing to adjust your code to the yet frequently changing Transformer API! Skål!');
 
     Number.prototype.toFixedNumber = function (x, base) {
         var pow = Math.pow(base || 10, x);
@@ -28,10 +28,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     };
 
     /**
-        * Polyfill for requestAnimationFrame.
-        * 
-        * @memberOf TransformStack
-        */
+     * Polyfill for requestAnimationFrame.
+     * 
+     * @memberOf TransformStack
+     */
     (function () {
         var lastTime = 0;
         var vendors = ['ms', 'moz', 'webkit', 'o'];
@@ -56,21 +56,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     })();
 
     /**
-        * A simple point class.
-        * 
-        * @class Point
-        */
+     * A simple point class.
+     * 
+     * @class Point
+     */
 
     var Point = function () {
 
         /**
-               * Creates an instance of Point.
-               * 
-               * @param {any} x The x value.
-               * @param {any} y The y value.
-               * 
-               * @memberOf Point
-               */
+         * Creates an instance of Point.
+         * 
+         * @param {any} x The x value.
+         * @param {any} y The y value.
+         * 
+         * @memberOf Point
+         */
         function Point(x, y) {
             _classCallCheck(this, Point);
 
@@ -79,12 +79,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         /**
-               * Returns the string representation of the point.
-               * 
-               * @returns The string representation of the point.
-               * 
-               * @memberOf Point
-               */
+         * Returns the string representation of the point.
+         * 
+         * @returns The string representation of the point.
+         * 
+         * @memberOf Point
+         */
 
 
         _createClass(Point, [{
@@ -98,28 +98,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }();
 
     /**
-        * The matrix class provides convenient functions for affine transformations, e.g., translate, rotate, and
-        * scale. It also offers functions like matrix multiplication or creating an inverse matrix.
-        * 
-        * @class Matrix
-        */
+     * The matrix class provides convenient functions for affine transformations, e.g., translate, rotate, and
+     * scale. It also offers functions like matrix multiplication or creating an inverse matrix.
+     * 
+     * @class Matrix
+     */
 
 
     var Matrix = function () {
 
         /**
-               * Creates an instance of Matrix. The matrix needs to be a two-dimensional array. The first index will
-               * be rows and the second index will be columns. The array needs to be in a n x m format. For example,
-               * an array [[1, 2, 3], [4, 5, 6], [7, 8 ,9]] will result in the following matrix:
-               * 
-               * 1   2   3
-               * 4   5   6
-               * 7   8   9
-               * 
-               * @param {any} M A two-dimensional array.
-               * 
-               * @memberOf Matrix
-               */
+         * Creates an instance of Matrix. The matrix needs to be a two-dimensional array. The first index will
+         * be rows and the second index will be columns. The array needs to be in a n x m format. For example,
+         * an array [[1, 2, 3], [4, 5, 6], [7, 8 ,9]] will result in the following matrix:
+         * 
+         * 1   2   3
+         * 4   5   6
+         * 7   8   9
+         * 
+         * @param {any} M A two-dimensional array.
+         * 
+         * @memberOf Matrix
+         */
         function Matrix(M) {
             _classCallCheck(this, Matrix);
 
@@ -130,11 +130,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         /**
-               * Sets the matrix. The matrix needs to be a two-dimensional array. The first index will be rows and
-               * the second index will be columns. The array needs to be in a n x m format.
-               * 
-               * @memberOf Matrix
-               */
+         * Sets the matrix. The matrix needs to be a two-dimensional array. The first index will be rows and
+         * the second index will be columns. The array needs to be in a n x m format.
+         * 
+         * @memberOf Matrix
+         */
 
 
         _createClass(Matrix, [{
@@ -142,15 +142,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
             /**
-                   * Translates the matrix by tx and ty.
-                   * 
-                   * @param {Number} tx The translation value in x.
-                   * @param {Number} ty The translation value in y.
-                   * 
-                   * @memberOf Matrix
-                   */
+             * Translates the matrix by tx and ty.
+             * 
+             * @param {Number} tx The translation value in x.
+             * @param {Number} ty The translation value in y.
+             * 
+             * @memberOf Matrix
+             */
             value: function translate(tx, ty) {
-                var truncate = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+                var truncate = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
                 var M = this.multiply(new Matrix([[1, 0, tx], [0, 1, ty], [0, 0, 1]]), truncate).matrix;
 
@@ -158,17 +158,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Rotates the matrix by angle. The rotation value has to be in degrees.
-                   * 
-                   * @param {Number} angle The rotation value in degrees.
-                   * 
-                   * @memberOf Matrix
-                   */
+             * Rotates the matrix by angle. The rotation value has to be in degrees.
+             * 
+             * @param {Number} angle The rotation value in degrees.
+             * 
+             * @memberOf Matrix
+             */
 
         }, {
             key: 'rotate',
             value: function rotate(angle) {
-                var truncate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+                var truncate = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
                 var rad = angle * (Math.PI / 180);
                 var costheta = Math.cos(rad);
@@ -180,18 +180,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Scales the matrix by sx and sy.
-                   * 
-                   * @param {Number} sx The scale value in x.
-                   * @param {Number} sy The scale value in y.
-                   * 
-                   * @memberOf Matrix
-                   */
+             * Scales the matrix by sx and sy.
+             * 
+             * @param {Number} sx The scale value in x.
+             * @param {Number} sy The scale value in y.
+             * 
+             * @memberOf Matrix
+             */
 
         }, {
             key: 'scale',
             value: function scale(sx, sy) {
-                var truncate = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+                var truncate = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
                 var M = this.multiply(new Matrix([[sx, 0, 0], [0, sy, 0], [0, 0, 1]]), truncate).matrix;
 
@@ -199,18 +199,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Skwes the matrix in degX and degY.
-                   * 
-                   * @param {Number} degX The skew value in x in degrees.
-                   * @param {Number} degY The skew value in y in degrees.
-                   * 
-                   * @memberOf Matrix
-                   */
+             * Skwes the matrix in degX and degY.
+             * 
+             * @param {Number} degX The skew value in x in degrees.
+             * @param {Number} degY The skew value in y in degrees.
+             * 
+             * @memberOf Matrix
+             */
 
         }, {
             key: 'skew',
             value: function skew(degX, degY) {
-                var truncate = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+                var truncate = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
                 var radX = degX * (Math.PI / 180);
                 var radY = degY * (Math.PI / 180);
@@ -223,20 +223,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Multiplies a given matrix with this matrix and returns the result as new matrix instance. In order
-                   * to perform the matrix multiplication, rows of matrix M1 need to match columns of matrix M2 as well
-                   * as columns of matrix M1 need to match rows of matrix M2.
-                   * 
-                   * @param {any} M The matrix used to multiply with this matrix.
-                   * @returns The multipied matrix.
-                   * 
-                   * @memberOf Matrix
-                   */
+             * Multiplies a given matrix with this matrix and returns the result as new matrix instance. In order
+             * to perform the matrix multiplication, rows of matrix M1 need to match columns of matrix M2 as well
+             * as columns of matrix M1 need to match rows of matrix M2.
+             * 
+             * @param {any} M The matrix used to multiply with this matrix.
+             * @returns The multipied matrix.
+             * 
+             * @memberOf Matrix
+             */
 
         }, {
             key: 'multiply',
             value: function multiply(M) {
-                var truncate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+                var truncate = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
 
                 if (this.rows !== M.columns || this.columns !== M.rows) {
@@ -262,12 +262,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Multiplies this matrix by the given matrix and replaces this matrix by the resulting matrix.
-                   * 
-                   * @param {any} The matrix used to multiply with this matrix.
-                   * 
-                   * @memberOf Matrix
-                   */
+             * Multiplies this matrix by the given matrix and replaces this matrix by the resulting matrix.
+             * 
+             * @param {any} The matrix used to multiply with this matrix.
+             * 
+             * @memberOf Matrix
+             */
 
         }, {
             key: 'multiplyBy',
@@ -278,12 +278,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Creates a copy of the matrix.
-                   * 
-                   * @returns The copy of this matrix.
-                   * 
-                   * @memberOf Matrix
-                   */
+             * Creates a copy of the matrix.
+             * 
+             * @returns The copy of this matrix.
+             * 
+             * @memberOf Matrix
+             */
 
         }, {
             key: 'copy',
@@ -294,14 +294,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Returns the inverse matrix of this matrix.
-                   * 
-                   * http://blog.acipo.com/matrix-inversion-in-javascript/
-                   * 
-                   * @readonly
-                   * 
-                   * @memberOf Matrix
-                   */
+             * Returns the inverse matrix of this matrix.
+             * 
+             * http://blog.acipo.com/matrix-inversion-in-javascript/
+             * 
+             * @readonly
+             * 
+             * @memberOf Matrix
+             */
 
         }, {
             key: 'toJSON',
@@ -313,15 +313,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
             /**
-                   * Converts the matrix to a CSS matrix transform. It respects whether the matrix should be a
-                   * CSS matrix() or CSS matrix3d().
-                   * 
-                   * @returns The CSS transform.
-                   * 
-                   * @memberOf Matrix
-                   */
+             * Converts the matrix to a CSS matrix transform. It respects whether the matrix should be a
+             * CSS matrix() or CSS matrix3d().
+             * 
+             * @returns The CSS transform.
+             * 
+             * @memberOf Matrix
+             */
             value: function toCss() {
-                var fixed = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+                var fixed = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
 
 
                 var M = this.matrix;
@@ -373,13 +373,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Returns true if matrix M equals to this matrix.
-                   * 
-                   * @param {any} M A matrix to compare to.
-                   * @returns True if this matrix and matrix M are equal.
-                   * 
-                   * @memberOf Matrix
-                   */
+             * Returns true if matrix M equals to this matrix.
+             * 
+             * @param {any} M A matrix to compare to.
+             * @returns True if this matrix and matrix M are equal.
+             * 
+             * @memberOf Matrix
+             */
 
         }, {
             key: 'equals',
@@ -388,27 +388,27 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Returns true if both matrix have the same matrix values, false otherwise.
-                   * 
-                   * @static
-                   * @param {any} M1 Matrix 1.
-                   * @param {any} M2 Matrix 2.
-                   * @returns True if matrix M1 and M2 are equal.
-                   * 
-                   * @memberOf Matrix
-                   */
+             * Returns true if both matrix have the same matrix values, false otherwise.
+             * 
+             * @static
+             * @param {any} M1 Matrix 1.
+             * @param {any} M2 Matrix 2.
+             * @returns True if matrix M1 and M2 are equal.
+             * 
+             * @memberOf Matrix
+             */
 
         }, {
             key: 'toString',
 
 
             /**
-                   * Returns the matrix in a human readable format. 
-                   * 
-                   * @returns The matrix in string format.
-                   * 
-                   * @memberOf Matrix
-                   */
+             * Returns the matrix in a human readable format. 
+             * 
+             * @returns The matrix in string format.
+             * 
+             * @memberOf Matrix
+             */
             value: function toString() {
                 return 'Matrix [rows=' + this.rows + ',columns=' + this.columns + ',matrix=' + JSON.stringify(this.matrix) + ']';
             }
@@ -421,22 +421,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Returns the matrix as a two-dimensional array.
-                   * 
-                   * @memberOf Matrix
-                   */
+             * Returns the matrix as a two-dimensional array.
+             * 
+             * @memberOf Matrix
+             */
             ,
             get: function get() {
                 return this._matrix;
             }
 
             /**
-                   * Returns number of rows of matrix.
-                   * 
-                   * @readonly
-                   * 
-                   * @memberOf Matrix
-                   */
+             * Returns number of rows of matrix.
+             * 
+             * @readonly
+             * 
+             * @memberOf Matrix
+             */
 
         }, {
             key: 'rows',
@@ -445,12 +445,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Returns number of columns of matrix.
-                   * 
-                   * @readonly
-                   * 
-                   * @memberOf Matrix
-                   */
+             * Returns number of columns of matrix.
+             * 
+             * @readonly
+             * 
+             * @memberOf Matrix
+             */
 
         }, {
             key: 'columns',
@@ -627,14 +627,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Creates an n x n identity matrix.
-                   * 
-                   * @static
-                   * @param {any} n The number of rows and columns to create this n x n identity matrix.
-                   * @returns The identity matrix.
-                   * 
-                   * @memberOf Matrix
-                   */
+             * Creates an n x n identity matrix.
+             * 
+             * @static
+             * @param {any} n The number of rows and columns to create this n x n identity matrix.
+             * @returns The identity matrix.
+             * 
+             * @memberOf Matrix
+             */
 
         }, {
             key: 'identity',
@@ -653,14 +653,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Creates a matrix from a DOM element (e.g., a HTMLElement or a SVGElement).
-                   * 
-                   * @static
-                   * @param {any} element A DOM element from which the matrix is created from.
-                   * @returns The matrix.
-                   * 
-                   * @memberOf Matrix
-                   */
+             * Creates a matrix from a DOM element (e.g., a HTMLElement or a SVGElement).
+             * 
+             * @static
+             * @param {any} element A DOM element from which the matrix is created from.
+             * @returns The matrix.
+             * 
+             * @memberOf Matrix
+             */
 
         }, {
             key: 'from',
@@ -729,19 +729,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }();
 
     /**
-        * The base class for a transforms.
-        * 
-        * @class Transform
-        */
+     * The base class for a transforms.
+     * 
+     * @class Transform
+     */
 
 
     var Transform = function () {
 
         /**
-               * Creates an instance of Transform. It will create an instance with a default identity matrix.
-               * 
-               * @memberOf Transform
-               */
+         * Creates an instance of Transform. It will create an instance with a default identity matrix.
+         * 
+         * @memberOf Transform
+         */
         function Transform() {
             _classCallCheck(this, Transform);
 
@@ -754,12 +754,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
             /**
-                   * Applies this transform to the matrix given as parameter.
-                   * 
-                   * @param {any} matrix The matrix to which this transform will be applied.
-                   * 
-                   * @memberOf Transform
-                   */
+             * Applies this transform to the matrix given as parameter.
+             * 
+             * @param {any} matrix The matrix to which this transform will be applied.
+             * 
+             * @memberOf Transform
+             */
             value: function apply(matrix) {
                 var centerPointMatrix = Matrix.identity(3);
                 centerPointMatrix.translate(this._centerPoint.x, this._centerPoint.y);
@@ -770,12 +770,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Unapplies this transformation from the matrix given as paramter.
-                   * 
-                   * @param {any} matrix The matrix from which this transform will be unapplied.
-                   * 
-                   * @memberOf Transform
-                   */
+             * Unapplies this transformation from the matrix given as paramter.
+             * 
+             * @param {any} matrix The matrix from which this transform will be unapplied.
+             * 
+             * @memberOf Transform
+             */
 
         }, {
             key: 'unapply',
@@ -816,27 +816,27 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }();
 
     /**
-        * The translate transform.
-        * 
-        * @class TranslateTransform
-        * @extends {Transform}
-        */
+     * The translate transform.
+     * 
+     * @class TranslateTransform
+     * @extends {Transform}
+     */
 
 
     var TranslateTransform = function (_Transform) {
         _inherits(TranslateTransform, _Transform);
 
         /**
-               * Creates an instance of TranslateTransform. It will translate a matrix by tx and ty.
-               * 
-               * @param {any} tx The translate value in x.
-               * @param {any} ty The translate value in y.
-               * 
-               * @memberOf TranslateTransform
-               */
+         * Creates an instance of TranslateTransform. It will translate a matrix by tx and ty.
+         * 
+         * @param {any} tx The translate value in x.
+         * @param {any} ty The translate value in y.
+         * 
+         * @memberOf TranslateTransform
+         */
         function TranslateTransform() {
-            var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-            var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+            var x = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+            var y = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 
             _classCallCheck(this, TranslateTransform);
 
@@ -872,10 +872,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Reset translate transform.
-                   * 
-                   * @memberOf TranslateTransform
-                   */
+             * Reset translate transform.
+             * 
+             * @memberOf TranslateTransform
+             */
 
         }, {
             key: 'reset',
@@ -906,25 +906,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }(Transform);
 
     /**
-        * The rotate transform.
-        * 
-        * @class RotateTransform
-        * @extends {Transform}
-        */
+     * The rotate transform.
+     * 
+     * @class RotateTransform
+     * @extends {Transform}
+     */
 
 
     var RotateTransform = function (_Transform2) {
         _inherits(RotateTransform, _Transform2);
 
         /**
-               * Creates an instance of RotateTransform. It will rotate a matrix by an angle [in degrees].
-               * 
-               * @param {any} deg The rotate value in degrees.
-               * 
-               * @memberOf RotateTransform
-               */
+         * Creates an instance of RotateTransform. It will rotate a matrix by an angle [in degrees].
+         * 
+         * @param {any} deg The rotate value in degrees.
+         * 
+         * @memberOf RotateTransform
+         */
         function RotateTransform() {
-            var angle = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+            var angle = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
 
             _classCallCheck(this, RotateTransform);
 
@@ -972,10 +972,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Reset rotate transform.
-                   * 
-                   * @memberOf RotateTransform
-                   */
+             * Reset rotate transform.
+             * 
+             * @memberOf RotateTransform
+             */
 
         }, {
             key: 'reset',
@@ -1006,27 +1006,27 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }(Transform);
 
     /**
-        * The scale transform.
-        * 
-        * @class ScaleTransform
-        * @extends {Transform}
-        */
+     * The scale transform.
+     * 
+     * @class ScaleTransform
+     * @extends {Transform}
+     */
 
 
     var ScaleTransform = function (_Transform3) {
         _inherits(ScaleTransform, _Transform3);
 
         /**
-               * Creates an instance of ScaleTransform. It will scale a matrix by x and y.
-               * 
-               * @param {any} x The scale factor in x.
-               * @param {any} y The scale factor in y.
-               * 
-               * @memberOf ScaleTransform
-               */
+         * Creates an instance of ScaleTransform. It will scale a matrix by x and y.
+         * 
+         * @param {any} x The scale factor in x.
+         * @param {any} y The scale factor in y.
+         * 
+         * @memberOf ScaleTransform
+         */
         function ScaleTransform() {
-            var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1.0;
-            var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1.0;
+            var x = arguments.length <= 0 || arguments[0] === undefined ? 1.0 : arguments[0];
+            var y = arguments.length <= 1 || arguments[1] === undefined ? 1.0 : arguments[1];
 
             _classCallCheck(this, ScaleTransform);
 
@@ -1065,10 +1065,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Reset scale transform.
-                   * 
-                   * @memberOf ScaleTransform
-                   */
+             * Reset scale transform.
+             * 
+             * @memberOf ScaleTransform
+             */
 
         }, {
             key: 'reset',
@@ -1102,8 +1102,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _inherits(TransformOrigin, _Transform4);
 
         function TransformOrigin(element) {
-            var ratioX = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-            var ratioY = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+            var ratioX = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+            var ratioY = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
 
             _classCallCheck(this, TransformOrigin);
 
@@ -1129,12 +1129,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
             /**
-                   * Applies this transform to the matrix given as parameter.
-                   * 
-                   * @param {any} matrix The matrix to which this transform will be applied.
-                   * 
-                   * @memberOf TransformOrigin
-                   */
+             * Applies this transform to the matrix given as parameter.
+             * 
+             * @param {any} matrix The matrix to which this transform will be applied.
+             * 
+             * @memberOf TransformOrigin
+             */
             value: function apply(matrix) {
 
                 // TODO Remove if a notifier to property clientWidth/clientHeight change has been
@@ -1148,12 +1148,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Unapplies this transformation from the matrix given as paramter.
-                   * 
-                   * @param {any} matrix The matrix from which this transform will be unapplied.
-                   * 
-                   * @memberOf TransformOrigin
-                   */
+             * Unapplies this transformation from the matrix given as paramter.
+             * 
+             * @param {any} matrix The matrix from which this transform will be unapplied.
+             * 
+             * @memberOf TransformOrigin
+             */
 
         }, {
             key: 'unapply',
@@ -1182,10 +1182,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Reset transform origin.
-                   * 
-                   * @memberOf TransformOrigin
-                   */
+             * Reset transform origin.
+             * 
+             * @memberOf TransformOrigin
+             */
 
         }, {
             key: 'reset',
@@ -1216,24 +1216,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }(Transform);
 
     /**
-        * The transform group can hold multiple transform of type TranslateTransform, RotateTransform, ScaleTransform, or
-        * even another TransformGroup. When the apply function is called, it will apply all added transform in the exact
-        * order in which they have been added to the transform group. The unapply function will unapply all transform in
-        * the reverse order in which they have been added to the transform group.
-        * 
-        * @class TransformGroup
-        * @extends {Transform}
-        */
+     * The transform group can hold multiple transform of type TranslateTransform, RotateTransform, ScaleTransform, or
+     * even another TransformGroup. When the apply function is called, it will apply all added transform in the exact
+     * order in which they have been added to the transform group. The unapply function will unapply all transform in
+     * the reverse order in which they have been added to the transform group.
+     * 
+     * @class TransformGroup
+     * @extends {Transform}
+     */
 
 
     var TransformGroup = function (_Transform5) {
         _inherits(TransformGroup, _Transform5);
 
         /**
-               * Creates an instance of TransformGroup.
-               * 
-               * @memberOf TransformGroup
-               */
+         * Creates an instance of TransformGroup.
+         * 
+         * @memberOf TransformGroup
+         */
         function TransformGroup() {
             _classCallCheck(this, TransformGroup);
 
@@ -1244,23 +1244,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         /**
-               * Add a transform (e.g., TranslateTransform, RotateTransform, or ScaleTransform) to the transform
-               * group. All transforms will be applied in the order they were added to the transform group. If a
-               * transform group is unapplied, it will unapply all transforms in reverse order.
-               * 
-               * @param {Transform} transform A transform of type Transform (e.g., TranslateTransform, RotateTransform,
-               * or ScaleTransform). Eventually, a TransformGroup can also be added.
-               * 
-               * @throws {Error} Throws an error if transform is not of type Transform.
-               * 
-               * @memberOf TransformGroup
-               */
+         * Add a transform (e.g., TranslateTransform, RotateTransform, or ScaleTransform) to the transform
+         * group. All transforms will be applied in the order they were added to the transform group. If a
+         * transform group is unapplied, it will unapply all transforms in reverse order.
+         * 
+         * @param {Transform} transform A transform of type Transform (e.g., TranslateTransform, RotateTransform,
+         * or ScaleTransform). Eventually, a TransformGroup can also be added.
+         * 
+         * @throws {Error} Throws an error if transform is not of type Transform.
+         * 
+         * @memberOf TransformGroup
+         */
 
 
         _createClass(TransformGroup, [{
             key: 'add',
             value: function add(transform) {
-                var inverse = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+                var inverse = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
 
                 // Check if transform is of proper type.
@@ -1276,16 +1276,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Remove a transform from this transform group. The transform has to be part of the transform group,
-                   * otherwise an error will be thrown.
-                   * 
-                   * @param {Transform} transform
-                   * 
-                   * @throws {Error} Throws an error if transform is not of type Transform and if transform is not part
-                   * of transform group.
-                   * 
-                   * @memberOf TransformGroup
-                   */
+             * Remove a transform from this transform group. The transform has to be part of the transform group,
+             * otherwise an error will be thrown.
+             * 
+             * @param {Transform} transform
+             * 
+             * @throws {Error} Throws an error if transform is not of type Transform and if transform is not part
+             * of transform group.
+             * 
+             * @memberOf TransformGroup
+             */
 
         }, {
             key: 'remove',
@@ -1307,24 +1307,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Applies all transforms in the order in which they have been added to this transform group. The
-                   * TransformGroup#apply function is specified in Transform ({@see Transform#apply}).
-                   * 
-                   * @param {any} matrix The matrix to which transforms are applied.
-                   * 
-                   * @memberOf TransformGroup
-                   */
+             * Applies all transforms in the order in which they have been added to this transform group. The
+             * TransformGroup#apply function is specified in Transform ({@see Transform#apply}).
+             * 
+             * @param {any} matrix The matrix to which transforms are applied.
+             * 
+             * @memberOf TransformGroup
+             */
 
         }, {
             key: 'apply',
             value: function apply(matrix) {
-                var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+                var type = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
 
                 // Apply each transform to the matrix.
                 this.transforms.forEach(function (_ref) {
-                    var transform = _ref.transform,
-                        inverse = _ref.inverse;
+                    var transform = _ref.transform;
+                    var inverse = _ref.inverse;
 
                     if (type && !(transform instanceof type) && !(transform instanceof TransformGroup)) {
                         return;
@@ -1335,24 +1335,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Unapplies all transforms in reverse order in which they have been added to this transform group. The
-                   * TransformGroup#unapply function is specified in Transform ({@see Transform#unapply}).
-                   * 
-                   * @param {any} matrix The matrix from which the transforms are unapplied.
-                   * 
-                   * @memberOf TransformGroup
-                   */
+             * Unapplies all transforms in reverse order in which they have been added to this transform group. The
+             * TransformGroup#unapply function is specified in Transform ({@see Transform#unapply}).
+             * 
+             * @param {any} matrix The matrix from which the transforms are unapplied.
+             * 
+             * @memberOf TransformGroup
+             */
 
         }, {
             key: 'unapply',
             value: function unapply(matrix) {
-                var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+                var type = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
 
                 // Unapply each transform from the matrix in reverse order.
                 this.transforms.slice().reverse().forEach(function (_ref2) {
-                    var transform = _ref2.transform,
-                        inverse = _ref2.inverse;
+                    var transform = _ref2.transform;
+                    var inverse = _ref2.inverse;
 
                     if (type && !(transform instanceof type) && !(transform instanceof TransformGroup)) {
                         return;
@@ -1363,10 +1363,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Reset transform group.
-                   * 
-                   * @memberOf TransformGroup
-                   */
+             * Reset transform group.
+             * 
+             * @memberOf TransformGroup
+             */
 
         }, {
             key: 'reset',
@@ -1379,19 +1379,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Transform group to string.
-                   * 
-                   * @returns Transform group in string representation.
-                   * 
-                   * @memberOf TransformGroup
-                   */
+             * Transform group to string.
+             * 
+             * @returns Transform group in string representation.
+             * 
+             * @memberOf TransformGroup
+             */
 
         }, {
             key: 'toString',
             value: function toString() {
                 return this.constructor.name + ' [transforms=[' + this.transforms.map(function (_ref4) {
-                    var transform = _ref4.transform,
-                        inverse = _ref4.inverse;
+                    var transform = _ref4.transform;
+                    var inverse = _ref4.inverse;
 
                     return inverse ? transform.inverse.toString() : transform.toString();
                 }).join(", ") + ']]';
@@ -1402,28 +1402,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }(Transform);
 
     /**
-        * The transform stack builds the base object responsible for transforming a DOM element. It takes an
-        * element as constructor parameter and binds itself to this element. The transform stack allows push
-        * and pop of transforms. A transform is immediately applied on the element and poping will immediately
-        * unapply the transform from the element.
-        * 
-        * @class Transformer
-        */
+     * The transform stack builds the base object responsible for transforming a DOM element. It takes an
+     * element as constructor parameter and binds itself to this element. The transform stack allows push
+     * and pop of transforms. A transform is immediately applied on the element and poping will immediately
+     * unapply the transform from the element.
+     * 
+     * @class Transformer
+     */
 
 
     var Transformer = function () {
 
         /**
-               * Creates an instance of Transformer. It takes a DOM element as contstructor parameter to which
-               * this transform stack will bind itself. The transform stack will receive the elements current 
-               * transform as matrix, which will be used to apply transforms.
-               * 
-               * @param {any} element A DOM element to which transforms will be applied. 
-               * 
-               * @memberOf Transformer
-               */
+         * Creates an instance of Transformer. It takes a DOM element as contstructor parameter to which
+         * this transform stack will bind itself. The transform stack will receive the elements current 
+         * transform as matrix, which will be used to apply transforms.
+         * 
+         * @param {any} element A DOM element to which transforms will be applied. 
+         * 
+         * @memberOf Transformer
+         */
         function Transformer(element, callback) {
-            var debug = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+            var debug = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
             _classCallCheck(this, Transformer);
 
@@ -1487,12 +1487,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         /**
-               * Get transform matrix from element transform.
-               * 
-               * @returns Element transform matrix.
-               * 
-               * @memberOf Transformer
-               */
+         * Get transform matrix from element transform.
+         * 
+         * @returns Element transform matrix.
+         * 
+         * @memberOf Transformer
+         */
 
 
         _createClass(Transformer, [{
@@ -1502,10 +1502,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Refresh transfroms from element transform.
-                   * 
-                   * @memberOf Transformer
-                   */
+             * Refresh transfroms from element transform.
+             * 
+             * @memberOf Transformer
+             */
 
         }, {
             key: 'refreshTransforms',
@@ -1517,16 +1517,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Reapplies all transforms again. This function should be used when any of the transforms in the transform
-                   * chain changed.
-                   * 
-                   * @memberOf TransformStack
-                   */
+             * Reapplies all transforms again. This function should be used when any of the transforms in the transform
+             * chain changed.
+             * 
+             * @memberOf TransformStack
+             */
 
         }, {
             key: 'reapplyTransforms',
             value: function reapplyTransforms() {
-                var updateElementsTransform = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+                var updateElementsTransform = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
 
                 var matrix = Matrix.identity(3);
 
@@ -1548,11 +1548,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Merge render transform to main transform and reset
-                   * render transform on success.
-                   * 
-                   * @memberOf Transformer
-                   */
+             * Merge render transform to main transform and reset
+             * render transform on success.
+             * 
+             * @memberOf Transformer
+             */
 
         }, {
             key: 'complete',
@@ -1564,12 +1564,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Updates the element's transform matrix.
-                   * 
-                   * @returns A promise resolved when element updated successfully.
-                   * 
-                   * @memberOf TransformStack
-                   */
+             * Updates the element's transform matrix.
+             * 
+             * @returns A promise resolved when element updated successfully.
+             * 
+             * @memberOf TransformStack
+             */
 
         }, {
             key: 'updateElement',
@@ -1609,12 +1609,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Sets the element's transform also compensating for various vendor prefixes.
-                   * 
-                   * @param {any} cssTansform The CSS transform.
-                   * 
-                   * @memberOf TransformStack
-                   */
+             * Sets the element's transform also compensating for various vendor prefixes.
+             * 
+             * @param {any} cssTansform The CSS transform.
+             * 
+             * @memberOf TransformStack
+             */
 
         }, {
             key: 'setCssTransform',
@@ -1638,12 +1638,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * tbd.
-                   * 
-                   * @returns
-                   * 
-                   * @memberOf Transformer
-                   */
+             * tbd.
+             * 
+             * @returns
+             * 
+             * @memberOf Transformer
+             */
 
         }, {
             key: 'getTransformHierarchy',
@@ -1669,36 +1669,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             /**
              * tbd.
-                   * 
-                   * @returns
-             *
+             * 
+             * @param {any} m
+             * 
              * @memberOf Transformer
              */
 
         }, {
-            key: 'getAncesterElementWithoutTransformer',
-            value: function getAncesterElementWithoutTransformer() {
-                var parent = this.element;
-                do {
-                    if (!parent.transformer) {
-                        return parent;
-                    }
-                } while ((parent = parent.parentElement) != null);
-
-                return window.document.body;
-            }
-
-            /**
-                   * tbd.
-                   * @param {any} m
-                   * 
-                   * @memberOf Transformer
-                   */
-
-        }, {
             key: 'applyToLocalTransform',
             value: function applyToLocalTransform(m) {
-                var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+                var type = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
                 this._transforms.apply(m, type);
 
@@ -1708,23 +1688,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * tbd.
-                   * 
-                   * @param {any} m
-                   * 
-                   * @memberOf Transformer
-                   */
+             * tbd.
+             * 
+             * @param {any} m
+             * 
+             * @memberOf Transformer
+             */
 
         }, {
             key: 'applyToGlobalTransform',
             value: function applyToGlobalTransform(m) {
-                var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+                var type = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
                 var allTransformers = this.getTransformHierarchy();
 
                 allTransformers.forEach(function (_ref5) {
-                    var transformer = _ref5.transformer,
-                        renderTransform = _ref5.renderTransform;
+                    var transformer = _ref5.transformer;
+                    var renderTransform = _ref5.renderTransform;
 
 
                     // Undo main transforms.
@@ -1740,13 +1720,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Converts a point from global coordinates to local coordinates.
-                   * 
-                   * @param {Point} point The point with global x- and y-coordinates.
-                   * @returns The point with local x- and y-coordinates.
-                   * 
-                   * @memberOf TransformStack
-                   */
+             * Converts a point from global coordinates to local coordinates.
+             * 
+             * @param {Point} point The point with global x- and y-coordinates.
+             * @returns The point with local x- and y-coordinates.
+             * 
+             * @memberOf TransformStack
+             */
 
         }, {
             key: 'fromGlobalToLocal',
@@ -1756,32 +1736,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     throw new Error('point needs to be of instance ' + Point.name);
                 }
 
-                // adjust x and y according to ancestor element offset
-                var ancestor = this.getAncesterElementWithoutTransformer();
-
-                var _ancestor$getBounding = ancestor.getBoundingClientRect(),
-                    left = _ancestor$getBounding.left,
-                    top = _ancestor$getBounding.top;
-
-                var x = left ? point.x - left : point.x;
-                var y = top ? point.y - top : point.y;
-
                 var m = Matrix.identity(3);
-                m.translate(x, y);
+                m.translate(point.x, point.y);
 
                 this.applyToGlobalTransform(m);
 
-                return new Point(m.tx, m.ty);
+                var x = m.tx;
+                var y = m.ty;
+
+                return new Point(x, y);
             }
 
             /**
-                   * Converts a point from local coordinates to global coordinates.
-                   * 
-                   * @param {any} point The point with local x- and y-coordinates.
-                   * @returns The point with global x- and y-coordinates.
-                   * 
-                   * @memberOf TransformStack
-                   */
+             * Converts a point from local coordinates to global coordinates.
+             * 
+             * @param {any} point The point with local x- and y-coordinates.
+             * @returns The point with global x- and y-coordinates.
+             * 
+             * @memberOf TransformStack
+             */
 
         }, {
             key: 'fromLocalToGlobal',
@@ -1790,15 +1763,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * Converts a delta point from global coordinates to local coordinates.
-                   * 
-                   * @param {any} point The delta point with global x- and y-coordinates.
-                   * @returns The delta point with local x- and y-coordinates.
-                   * 
-                   * @memberOf TransformStack
-                   * 
-                   * @see TransformStack#fromGlobalToLocal
-                   */
+             * Converts a delta point from global coordinates to local coordinates.
+             * 
+             * @param {any} point The delta point with global x- and y-coordinates.
+             * @returns The delta point with local x- and y-coordinates.
+             * 
+             * @memberOf TransformStack
+             * 
+             * @see TransformStack#fromGlobalToLocal
+             */
 
         }, {
             key: 'fromGlobalToLocalDelta',
@@ -1808,24 +1781,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     throw new Error('delta point needs to be of instance ' + Point.name);
                 }
 
-                // adjust x and y according to ancestor element offset
-                var ancestor = this.getAncesterElementWithoutTransformer();
-
-                var _ancestor$getBounding2 = ancestor.getBoundingClientRect(),
-                    left = _ancestor$getBounding2.left,
-                    top = _ancestor$getBounding2.top;
-
-                var x = left ? deltaPoint.x - left : deltaPoint.x;
-                var y = top ? deltaPoint.y - top : deltaPoint.y;
-
                 var allTransforms = this.getTransformHierarchy();
 
                 var m = Matrix.identity(3);
-                m.translate(x, y);
+                m.translate(deltaPoint.x, deltaPoint.y);
 
                 allTransforms.forEach(function (_ref6) {
-                    var transformer = _ref6.transformer,
-                        renderTransform = _ref6.renderTransform;
+                    var transformer = _ref6.transformer;
+                    var renderTransform = _ref6.renderTransform;
 
 
                     // Undo main transforms.
@@ -1839,22 +1802,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * tbd.
-                   * 
-                   * @readonly
-                   * 
-                   * @memberOf Transformer
-                   */
+             * tbd.
+             * 
+             * @readonly
+             * 
+             * @memberOf Transformer
+             */
 
         }, {
             key: 'destroy',
 
 
             /**
-                   * tbd.
-                   * 
-                   * @memberOf Transformer
-                   */
+             * tbd.
+             * 
+             * @memberOf Transformer
+             */
             value: function destroy() {
                 delete this._scaleTransform;
                 delete this._rotateTransform;
@@ -1870,12 +1833,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * tbd.
-                   * 
-                   * @readonly
-                   * 
-                   * @memberOf Transformer
-                   */
+             * tbd.
+             * 
+             * @readonly
+             * 
+             * @memberOf Transformer
+             */
 
         }, {
             key: 'globalRotation',
@@ -1886,12 +1849,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * tbd.
-                   * 
-                   * @readonly
-                   * 
-                   * @memberOf Transformer
-                   */
+             * tbd.
+             * 
+             * @readonly
+             * 
+             * @memberOf Transformer
+             */
 
         }, {
             key: 'localScale',
@@ -1902,12 +1865,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * tbd.
-                   * 
-                   * @readonly
-                   * 
-                   * @memberOf Transformer
-                   */
+             * tbd.
+             * 
+             * @readonly
+             * 
+             * @memberOf Transformer
+             */
 
         }, {
             key: 'globalScale',
@@ -1918,12 +1881,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-                   * tbd.
-                   * 
-                   * @readonly
-                   * 
-                   * @memberOf Transformer
-                   */
+             * tbd.
+             * 
+             * @readonly
+             * 
+             * @memberOf Transformer
+             */
 
         }, {
             key: 'globalScaleTest',
@@ -1946,8 +1909,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 // Apply all transforms in reverse order.
                 allTransformers.reverse().forEach(function (_ref7) {
-                    var transformer = _ref7.transformer,
-                        renderTransform = _ref7.renderTransform;
+                    var transformer = _ref7.transformer;
+                    var renderTransform = _ref7.renderTransform;
 
 
                     // Undo main transforms.
@@ -2022,12 +1985,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         ScaleTransform: ScaleTransform,
         TransformGroup: TransformGroup,
         bindElement: function bindElement(element, callback, debug) {
-
-            // check for Promise support
-            if (!Promise) {
-                throw new Error('The Transformer library requires Promise support');
-            }
-
             return new Promise(function (resolve, reject) {
 
                 if (element.transformer) {

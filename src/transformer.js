@@ -3,24 +3,24 @@
  * {@link http://zaxxon.cs.au.dk/transformer-tests}
  */
 ;
-(function (exports) {
+(function(exports) {
 
     // Module object holding private variables.
     const module = {};
 
     console.warn(`The transformer.js library is very much in flux. Do not use this API if you are not willing to adjust your code to the yet frequently changing Transformer API! Skål!`);
 
-    Number.prototype.toFixedNumber = function (x, base) {
+    Number.prototype.toFixedNumber = function(x, base) {
         var pow = Math.pow(base || 10, x);
         return +(Math.round(this * pow) / pow);
     };
 
-	/**
+    /**
      * Polyfill for requestAnimationFrame.
      * 
      * @memberOf TransformStack
      */
-    (function () {
+    (function() {
         var lastTime = 0;
         var vendors = ['ms', 'moz', 'webkit', 'o'];
         for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
@@ -30,29 +30,29 @@
         }
 
         if (!window.requestAnimationFrame)
-            window.requestAnimationFrame = function (callback, element) {
+            window.requestAnimationFrame = function(callback, element) {
                 var currTime = new Date().getTime();
                 var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-                var id = window.setTimeout(function () { callback(currTime + timeToCall); },
+                var id = window.setTimeout(function() { callback(currTime + timeToCall); },
                     timeToCall);
                 lastTime = currTime + timeToCall;
                 return id;
             };
 
         if (!window.cancelAnimationFrame)
-            window.cancelAnimationFrame = function (id) {
+            window.cancelAnimationFrame = function(id) {
                 clearTimeout(id);
             };
     }());
 
-	/**
+    /**
      * A simple point class.
      * 
      * @class Point
      */
     class Point {
 
-		/**
+        /**
          * Creates an instance of Point.
          * 
          * @param {any} x The x value.
@@ -65,7 +65,7 @@
             this.y = y;
         }
 
-		/**
+        /**
          * Returns the string representation of the point.
          * 
          * @returns The string representation of the point.
@@ -77,7 +77,7 @@
         }
     }
 
-	/**
+    /**
      * The matrix class provides convenient functions for affine transformations, e.g., translate, rotate, and
      * scale. It also offers functions like matrix multiplication or creating an inverse matrix.
      * 
@@ -85,7 +85,7 @@
      */
     class Matrix {
 
-		/**
+        /**
          * Creates an instance of Matrix. The matrix needs to be a two-dimensional array. The first index will
          * be rows and the second index will be columns. The array needs to be in a n x m format. For example,
          * an array [[1, 2, 3], [4, 5, 6], [7, 8 ,9]] will result in the following matrix:
@@ -106,7 +106,7 @@
             this.matrix = M;
         }
 
-		/**
+        /**
          * Sets the matrix. The matrix needs to be a two-dimensional array. The first index will be rows and
          * the second index will be columns. The array needs to be in a n x m format.
          * 
@@ -118,7 +118,7 @@
             this._columns = matrix[0].length;
         }
 
-		/**
+        /**
          * Returns the matrix as a two-dimensional array.
          * 
          * @memberOf Matrix
@@ -127,7 +127,7 @@
             return this._matrix;
         }
 
-		/**
+        /**
          * Returns number of rows of matrix.
          * 
          * @readonly
@@ -138,7 +138,7 @@
             return this._rows;
         }
 
-		/**
+        /**
          * Returns number of columns of matrix.
          * 
          * @readonly
@@ -186,7 +186,7 @@
             return this.d;
         }
 
-		/**
+        /**
          * Translates the matrix by tx and ty.
          * 
          * @param {Number} tx The translation value in x.
@@ -204,7 +204,7 @@
             this.matrix = M;
         }
 
-		/**
+        /**
          * Rotates the matrix by angle. The rotation value has to be in degrees.
          * 
          * @param {Number} angle The rotation value in degrees.
@@ -225,7 +225,7 @@
             this.matrix = M;
         }
 
-		/**
+        /**
          * Scales the matrix by sx and sy.
          * 
          * @param {Number} sx The scale value in x.
@@ -243,7 +243,7 @@
             this.matrix = M;
         }
 
-		/**
+        /**
          * Skwes the matrix in degX and degY.
          * 
          * @param {Number} degX The skew value in x in degrees.
@@ -266,7 +266,7 @@
             this.matrix = M;
         }
 
-		/**
+        /**
          * Multiplies a given matrix with this matrix and returns the result as new matrix instance. In order
          * to perform the matrix multiplication, rows of matrix M1 need to match columns of matrix M2 as well
          * as columns of matrix M1 need to match rows of matrix M2.
@@ -300,7 +300,7 @@
             return new Matrix(m);
         }
 
-		/**
+        /**
          * Multiplies this matrix by the given matrix and replaces this matrix by the resulting matrix.
          * 
          * @param {any} The matrix used to multiply with this matrix.
@@ -313,7 +313,7 @@
             this.matrix = m;
         }
 
-		/**
+        /**
          * Creates a copy of the matrix.
          * 
          * @returns The copy of this matrix.
@@ -326,7 +326,7 @@
             return new Matrix(copyM);
         }
 
-		/**
+        /**
          * Returns the inverse matrix of this matrix.
          * 
          * http://blog.acipo.com/matrix-inversion-in-javascript/
@@ -452,7 +452,7 @@
             return new Matrix(matrix);
         }
 
-		/**
+        /**
          * Converts the matrix to a CSS matrix transform. It respects whether the matrix should be a
          * CSS matrix() or CSS matrix3d().
          * 
@@ -510,7 +510,7 @@
             return `matrix3d(${a1}, ${b1}, ${c1}, ${d1}, ${a2}, ${b2}, ${c2}, ${d2}, ${a3}, ${b3}, ${c3}, ${d3}, ${a4}, ${b4}, ${c4}, ${d4})`;
         }
 
-		/**
+        /**
          * Returns true if matrix M equals to this matrix.
          * 
          * @param {any} M A matrix to compare to.
@@ -522,7 +522,7 @@
             return Matrix.equals(this, M);
         }
 
-		/**
+        /**
          * Returns true if both matrix have the same matrix values, false otherwise.
          * 
          * @static
@@ -536,7 +536,7 @@
             return JSON.stringify(M1.matrix) === JSON.stringify(M2.matrix);
         }
 
-		/**
+        /**
          * Creates an n x n identity matrix.
          * 
          * @static
@@ -559,7 +559,7 @@
             return new Matrix(m);
         }
 
-		/**
+        /**
          * Creates a matrix from a DOM element (e.g., a HTMLElement or a SVGElement).
          * 
          * @static
@@ -637,7 +637,7 @@
             }
         }
 
-		/**
+        /**
          * Returns the matrix in a human readable format. 
          * 
          * @returns The matrix in string format.
@@ -649,14 +649,14 @@
         }
     }
 
-	/**
+    /**
      * The base class for a transforms.
      * 
      * @class Transform
      */
     class Transform {
 
-		/**
+        /**
          * Creates an instance of Transform. It will create an instance with a default identity matrix.
          * 
          * @memberOf Transform
@@ -670,7 +670,7 @@
             return this._centerPoint;
         }
 
-		/**
+        /**
          * Applies this transform to the matrix given as parameter.
          * 
          * @param {any} matrix The matrix to which this transform will be applied.
@@ -686,7 +686,7 @@
             matrix.multiplyBy(centerPointMatrix);
         }
 
-		/**
+        /**
          * Unapplies this transformation from the matrix given as paramter.
          * 
          * @param {any} matrix The matrix from which this transform will be unapplied.
@@ -720,7 +720,7 @@
 
 
 
-	/**
+    /**
      * The translate transform.
      * 
      * @class TranslateTransform
@@ -728,7 +728,7 @@
      */
     class TranslateTransform extends Transform {
 
-		/**
+        /**
          * Creates an instance of TranslateTransform. It will translate a matrix by tx and ty.
          * 
          * @param {any} tx The translate value in x.
@@ -771,7 +771,7 @@
             this.set(tx, ty);
         }
 
-		/**
+        /**
          * Reset translate transform.
          * 
          * @memberOf TranslateTransform
@@ -792,7 +792,7 @@
         }
     }
 
-	/**
+    /**
      * The rotate transform.
      * 
      * @class RotateTransform
@@ -800,7 +800,7 @@
      */
     class RotateTransform extends Transform {
 
-		/**
+        /**
          * Creates an instance of RotateTransform. It will rotate a matrix by an angle [in degrees].
          * 
          * @param {any} deg The rotate value in degrees.
@@ -854,7 +854,7 @@
             this.set(angle);
         }
 
-		/**
+        /**
          * Reset rotate transform.
          * 
          * @memberOf RotateTransform
@@ -875,7 +875,7 @@
         }
     }
 
-	/**
+    /**
      * The scale transform.
      * 
      * @class ScaleTransform
@@ -883,7 +883,7 @@
      */
     class ScaleTransform extends Transform {
 
-		/**
+        /**
          * Creates an instance of ScaleTransform. It will scale a matrix by x and y.
          * 
          * @param {any} x The scale factor in x.
@@ -929,7 +929,7 @@
             this.set(sx, sy);
         }
 
-		/**
+        /**
          * Reset scale transform.
          * 
          * @memberOf ScaleTransform
@@ -973,7 +973,7 @@
             return TransformOrigin.from(this.element, this.matrix.inverse);
         }
 
-		/**
+        /**
          * Applies this transform to the matrix given as parameter.
          * 
          * @param {any} matrix The matrix to which this transform will be applied.
@@ -996,7 +996,7 @@
             super.apply(matrix);
         }
 
-		/**
+        /**
          * Unapplies this transformation from the matrix given as paramter.
          * 
          * @param {any} matrix The matrix from which this transform will be unapplied.
@@ -1030,7 +1030,7 @@
             this.set(M.tx, M.ty);
         }
 
-		/**
+        /**
          * Reset transform origin.
          * 
          * @memberOf TransformOrigin
@@ -1051,7 +1051,7 @@
         }
     }
 
-	/**
+    /**
      * The transform group can hold multiple transform of type TranslateTransform, RotateTransform, ScaleTransform, or
      * even another TransformGroup. When the apply function is called, it will apply all added transform in the exact
      * order in which they have been added to the transform group. The unapply function will unapply all transform in
@@ -1062,7 +1062,7 @@
      */
     class TransformGroup extends Transform {
 
-		/**
+        /**
          * Creates an instance of TransformGroup.
          * 
          * @memberOf TransformGroup
@@ -1073,7 +1073,7 @@
             this.transforms = [];
         }
 
-		/**
+        /**
          * Add a transform (e.g., TranslateTransform, RotateTransform, or ScaleTransform) to the transform
          * group. All transforms will be applied in the order they were added to the transform group. If a
          * transform group is unapplied, it will unapply all transforms in reverse order.
@@ -1099,7 +1099,7 @@
             });
         }
 
-		/**
+        /**
          * Remove a transform from this transform group. The transform has to be part of the transform group,
          * otherwise an error will be thrown.
          * 
@@ -1127,7 +1127,7 @@
             this.transforms.splice(idx, 1);
         }
 
-		/**
+        /**
          * Applies all transforms in the order in which they have been added to this transform group. The
          * TransformGroup#apply function is specified in Transform ({@see Transform#apply}).
          * 
@@ -1147,7 +1147,7 @@
             });
         }
 
-		/**
+        /**
          * Unapplies all transforms in reverse order in which they have been added to this transform group. The
          * TransformGroup#unapply function is specified in Transform ({@see Transform#unapply}).
          * 
@@ -1167,7 +1167,7 @@
             });
         }
 
-		/**
+        /**
          * Reset transform group.
          * 
          * @memberOf TransformGroup
@@ -1178,7 +1178,7 @@
             });
         }
 
-		/**
+        /**
          * Transform group to string.
          * 
          * @returns Transform group in string representation.
@@ -1186,14 +1186,14 @@
          * @memberOf TransformGroup
          */
         toString() {
-            return `${this.constructor.name} [transforms=[${this.transforms.map(({ transform, inverse }) => {
-                return inverse ? transform.inverse.toString() : transform.toString();
-            })
+            return `${this.constructor.name} [transforms=[${this.transforms.map(({transform, inverse}) => {
+                    return inverse ? transform.inverse.toString() : transform.toString();
+                })
                 .join(", ")}]]`;
         }
     }
 
-	/**
+    /**
      * The transform stack builds the base object responsible for transforming a DOM element. It takes an
      * element as constructor parameter and binds itself to this element. The transform stack allows push
      * and pop of transforms. A transform is immediately applied on the element and poping will immediately
@@ -1203,7 +1203,7 @@
      */
     class Transformer {
 
-		/**
+        /**
          * Creates an instance of Transformer. It takes a DOM element as contstructor parameter to which
          * this transform stack will bind itself. The transform stack will receive the elements current 
          * transform as matrix, which will be used to apply transforms.
@@ -1212,7 +1212,7 @@
          * 
          * @memberOf Transformer
          */
-        constructor(element, callback, debug = false) {
+        constructor(element, callback, debug = true) {
 
             // Element needs to be in DOM to get its clientWidth and clientHeight.
             if (!element.parentElement) {
@@ -1273,7 +1273,7 @@
             }
         }
 
-		/**
+        /**
          * Get transform matrix from element transform.
          * 
          * @returns Element transform matrix.
@@ -1284,7 +1284,7 @@
             return Matrix.from(this.element);
         }
 
-		/**
+        /**
          * Refresh transfroms from element transform.
          * 
          * @memberOf Transformer
@@ -1296,7 +1296,7 @@
             this._scaleTransform.update(matrix);
         }
 
-		/**
+        /**
          * Reapplies all transforms again. This function should be used when any of the transforms in the transform
          * chain changed.
          * 
@@ -1315,15 +1315,14 @@
             if (updateElementsTransform) {
                 // Update element transform.
                 return this.updateElement();
-            }
-            else {
+            } else {
                 return new Promise((resolve, reject) => {
                     resolve();
                 });
             }
         }
 
-		/**
+        /**
          * Merge render transform to main transform and reset
          * render transform on success.
          * 
@@ -1336,7 +1335,7 @@
             }
         }
 
-		/**
+        /**
          * Updates the element's transform matrix.
          * 
          * @returns A promise resolved when element updated successfully.
@@ -1377,7 +1376,7 @@
             });
         }
 
-		/**
+        /**
          * Sets the element's transform also compensating for various vendor prefixes.
          * 
          * @param {any} cssTansform The CSS transform.
@@ -1403,7 +1402,7 @@
             module.connectObserver();
         }
 
-		/**
+        /**
          * tbd.
          * 
          * @returns
@@ -1431,27 +1430,9 @@
             return allTransformers;
         }
 
-		/**
-		 * tbd.
-         * 
-         * @returns
-		 *
-		 * @memberOf Transformer
-		 */
-        getAncesterElementWithoutTransformer() {
-            let parent = this.element;
-            do {
-                if (!parent.transformer) {
-                    return parent;
-                }
-            }
-            while ((parent = parent.parentElement) != null);
-
-            return window.document.body;
-        }
-
-		/**
+        /**
          * tbd.
+         * 
          * @param {any} m
          * 
          * @memberOf Transformer
@@ -1464,7 +1445,7 @@
             }
         }
 
-		/**
+        /**
          * tbd.
          * 
          * @param {any} m
@@ -1488,7 +1469,7 @@
             });
         }
 
-		/**
+        /**
          * Converts a point from global coordinates to local coordinates.
          * 
          * @param {Point} point The point with global x- and y-coordinates.
@@ -1502,21 +1483,18 @@
                 throw new Error(`point needs to be of instance ${Point.name}`);
             }
 
-            // adjust x and y according to ancestor element offset
-            let ancestor = this.getAncesterElementWithoutTransformer();
-            let { left, top } = ancestor.getBoundingClientRect();
-            let x = left ? point.x - left : point.x;
-            let y = top ? point.y - top : point.y;
-
             let m = Matrix.identity(3);
-            m.translate(x, y);
+            m.translate(point.x, point.y);
 
             this.applyToGlobalTransform(m);
 
-            return new Point(m.tx, m.ty);
+            const x = m.tx;
+            const y = m.ty;
+
+            return new Point(x, y);
         }
 
-		/**
+        /**
          * Converts a point from local coordinates to global coordinates.
          * 
          * @param {any} point The point with local x- and y-coordinates.
@@ -1528,7 +1506,7 @@
             throw new Error(`not implemented`);
         }
 
-		/**
+        /**
          * Converts a delta point from global coordinates to local coordinates.
          * 
          * @param {any} point The delta point with global x- and y-coordinates.
@@ -1544,16 +1522,10 @@
                 throw new Error(`delta point needs to be of instance ${Point.name}`);
             }
 
-            // adjust x and y according to ancestor element offset
-            let ancestor = this.getAncesterElementWithoutTransformer();
-            let { left, top } = ancestor.getBoundingClientRect();
-            let x = left ? deltaPoint.x - left : deltaPoint.x;
-            let y = top ? deltaPoint.y - top : deltaPoint.y;
-
             const allTransforms = this.getTransformHierarchy();
 
             let m = Matrix.identity(3);
-            m.translate(x, y);
+            m.translate(deltaPoint.x, deltaPoint.y);
 
             allTransforms.forEach(({ transformer, renderTransform }) => {
 
@@ -1567,7 +1539,7 @@
             return new Point(m.tx, m.ty);
         }
 
-		/**
+        /**
          * tbd.
          * 
          * @readonly
@@ -1580,7 +1552,7 @@
             return m.angle;
         }
 
-		/**
+        /**
          * tbd.
          * 
          * @readonly
@@ -1593,7 +1565,7 @@
             return m.angle;
         }
 
-		/**
+        /**
          * tbd.
          * 
          * @readonly
@@ -1606,7 +1578,7 @@
             return new Point(m.scaleX, m.scaleY);
         }
 
-		/**
+        /**
          * tbd.
          * 
          * @readonly
@@ -1619,7 +1591,7 @@
             return new Point(m.scaleX, m.scaleY);
         }
 
-		/**
+        /**
          * tbd.
          * 
          * @readonly
@@ -1664,7 +1636,7 @@
             return new Point(scaleX, scaleY);
         }
 
-		/**
+        /**
          * tbd.
          * 
          * @memberOf Transformer
@@ -1677,7 +1649,7 @@
         }
     }
 
-    (function () {
+    (function() {
 
         const observerOptions = {
             attributes: true,
@@ -1701,14 +1673,14 @@
 
         let isConnected = false;
 
-        module.connectObserver = function () {
+        module.connectObserver = function() {
             if (!isConnected) {
                 observer.observe(document.body, observerOptions);
                 isConnected = true;
             }
         };
 
-        module.disconnectObserver = function () {
+        module.disconnectObserver = function() {
             if (isConnected) {
                 observer.disconnect();
                 isConnected = false;
@@ -1728,12 +1700,6 @@
         ScaleTransform: ScaleTransform,
         TransformGroup: TransformGroup,
         bindElement: (element, callback, debug) => {
-
-            // check for Promise support
-            if (!Promise) {
-                throw new Error(`The Transformer library requires Promise support`);
-            }
-
             return new Promise((resolve, reject) => {
 
                 if (element.transformer) {
@@ -1776,4 +1742,5 @@
             });
         }
     };
+
 })(window);
