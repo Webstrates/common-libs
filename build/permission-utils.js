@@ -46,7 +46,7 @@ var Permissions = function () {
    * @param String provider="" Authentication provider, e.g., "github" for GitHub.
    */
   this.grant = function (username, permissions) {
-    var provider = arguments.length <= 2 || arguments[2] === undefined ? "" : arguments[2];
+    var provider = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "";
 
     var auth = getPermissions();
     var userPermission = auth.find(function (item) {
@@ -70,7 +70,7 @@ var Permissions = function () {
    * @param String provider="" Revoke permissions given the particular authentication provider.
    */
   this.revoke = function (username) {
-    var provider = arguments.length <= 1 || arguments[1] === undefined ? "" : arguments[1];
+    var provider = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
 
     var auth = getPermissions();
     var permissionIndex = auth.findIndex(function (item) {
@@ -89,9 +89,9 @@ var Permissions = function () {
     var auth = getPermissions();
     console.log("Document permissions");
     auth.forEach(function (_ref) {
-      var username = _ref.username;
-      var permissions = _ref.permissions;
-      var provider = _ref.provider;
+      var username = _ref.username,
+          permissions = _ref.permissions,
+          provider = _ref.provider;
 
       console.log("Username %s has %s permissions using %s provider.", username, permissions, provider);
     });
